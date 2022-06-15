@@ -1,0 +1,18 @@
+export const updateSignature = (mer?) => {
+    return fetch(`http://localhost:8088/rentalpackages/?id=${rentalpackages[0].id}`, {
+        method: "PUT",
+        headers: {
+            "Content-Type": "application/json"
+        },
+        body: JSON.stringify(mer?)
+    })
+        .then(response => response.json())
+}
+
+onChange={
+                            (evt) => {
+                                const copy = {...profile}
+                                copy.eSign = true
+                                updatePackageSign(copy)
+                            }
+                        }

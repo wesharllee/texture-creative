@@ -20,7 +20,7 @@ export const EmployeeViews = () => {
 
                 <Route path="home" element={<HomePage />} />
                 <Route path="create" element={<CreatePage />} />
-                <Route path="checkout" element={<CheckOutPage />} />
+                <Route path="checkout/:id" element={<CheckOutPage />} />
                 <Route path="confirmation" element={<ConfirmationPage />} />
                 <Route path="employeelounge" element={<EmployeeLoungePage />} />
 

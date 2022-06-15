@@ -61,7 +61,7 @@ export const CreatePage = () => {
                     furnitureId: newRental.furnitureId,
                     lightId: newRental.lightId,
                     totalCost: 0,
-                    eSign: ""
+                    eSign: false
                 }
                 fetch(`http://localhost:8080/rentalPackages`, {
                     method: "POST",
@@ -71,8 +71,8 @@ export const CreatePage = () => {
                     body: JSON.stringify(RentalPackage)
                 })
                     .then(response => response.json())
-                    .then(() => {
-                        Navigate("/checkout")
+                    .then((response) => {
+                        Navigate(`/checkout/${response.id}`)
                     })
             })
     }
