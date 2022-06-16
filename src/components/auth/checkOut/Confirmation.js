@@ -1,24 +1,26 @@
 import { useEffect, useState } from "react"
-import { useNavigate } from "react-router-dom"
+import { useNavigate, useParams } from "react-router-dom"
 
 
 export const ConfirmationPage = () => {
-    const [rentalPackages, setPackages] = useState([])
-    const navigate = useNavigate
+    const { id } = useParams()
+    const navigate = useNavigate()
 
-    
+
+    const [rentalPackage, setPackage] = useState({})
 
 
     useEffect(
         () => {
-            fetch(`http://localhost:8080/rentalPackages/?_expand=bookingDate&_expand=light&_expand=user`)
+            fetch(`http://localhost:8080/rentalPackages/${id}?_expand=bookingDate&_expand=light&_expand=user`)
                 .then(response => response.json())
-                .then((packagesArray) => {
-                    setPackages(packagesArray)
+                .then((packageObj) => {
+                    setPackage(packageObj)
                 })
         },
-        []
+        [id]
     )
+
     let timeFormat = (time) => {
         if (parseFloat(time, 2) > 12) {
             let newTime = parseFloat(time, 2) - 12
@@ -43,6 +45,20 @@ export const ConfirmationPage = () => {
 
     }
 
+    let timeFunc = (time) => {
+        if (parseFloat(time, 2) > 12) {
+            return "PM"
+        }
+        else return "AM"
+    }
+
+    let price = totalCost(rentalPackage?.light?.lightCost, hourlyCost(rentalPackage?.bookingDate?.totalHours))
+    let from = timeFormat(rentalPackage?.bookingDate?.startTime)
+    let until = timeFormat(rentalPackage?.bookingDate?.endTime)
+    let dateBooked = new Date(rentalPackage?.bookingDate?.date).toLocaleDateString('en-US', { timeZone: 'UTC' })
+    let name = rentalPackage?.user?.name
+    let startTime = timeFunc(rentalPackage?.bookingDate?.startTime)
+    let endTime = timeFunc(rentalPackage?.bookingDate?.endTime)
 
 
 
@@ -52,28 +68,21 @@ export const ConfirmationPage = () => {
         <article>
             <div className="confirmation_dateBooked">
 
-                {rentalPackages.map((rentalPackage) => {
-                    let price = totalCost(rentalPackage?.light?.lightCost, hourlyCost(rentalPackage?.bookingDate?.totalHours))
-                    let from = timeFormat(rentalPackage?.bookingDate?.startTime)
-                    let until = timeFormat(rentalPackage?.bookingDate?.endTime)
-                    let dateBooked = new Date(rentalPackage?.bookingDate?.date).toLocaleDateString()
-                    let name = rentalPackage.user.name
-
-                    return <section key={rentalPackage.id}>
-                        <div value={rentalPackage.id}>
-                            {name} has requested to book Texture Creative Studio for {dateBooked} from {from} until {until}</div>
-                        <div value={rentalPackage.id}>Price: ${price}</div>
-                    </section>
-                })}
-            </div>
-                <div>We Will Confirm Within 24 Hours</div>
-                <div>Thank You</div>
-            <div className="liability_form">
-                I Won't Break Your Shiz
-                <button onClick={() => navigate("/home")} >Home</button>
-
+                <section key={rentalPackage.id}>
+                    <div value={rentalPackage.id}>
+                        {name} has requested to book Texture Creative Studio for {dateBooked} from {from}{startTime} until {until}{endTime}</div>
+                    <div value={rentalPackage.id}>Price: ${price}</div>
+                </section>
 
             </div>
+            <div>We Will Confirm Within 24 Hours</div>
+            <div>Thank You</div>
+
+
+            <button onClick={() => navigate("/home")} >Home</button>
+
+
+
 
 
         </article>

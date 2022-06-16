@@ -4,14 +4,14 @@ import { useNavigate, useParams } from "react-router-dom"
 
 
 
+
 export const CheckOutPage = () => {
     const { id } = useParams()
-    
-    
     const [rentalPackage, setPackage] = useState({})
+    const [rentalBookingPackage, setRentalBooking] = useState({})
     const navigate = useNavigate()
-    
-    const updateSignature = (rentalPackage) => {
+
+    const sendRequest = (rentalPackage) => {
         return fetch(`http://localhost:8080/rentalPackages/${id}`, {
             method: "PUT",
             headers: {
@@ -19,8 +19,19 @@ export const CheckOutPage = () => {
             },
             body: JSON.stringify(rentalPackage)
         })
-            
+
     }
+
+    useEffect(
+        () => {
+            fetch(`http://localhost:8080/bookingDates/${id}`)
+                .then(response => response.json())
+                .then((bookingPackageObj) => {
+                    setRentalBooking(bookingPackageObj)
+                })
+        },
+        [id]
+    )
 
     useEffect(
         () => {
@@ -57,12 +68,32 @@ export const CheckOutPage = () => {
 
     }
 
+    let timeFunc = (time) => {
+        if (parseFloat(time, 2) > 12) {
+            return "PM"
+        }
+        else return "AM"
+    }
+
+    const DeleteButton = () => {
+        return <button
+            onClick={() => {
+                fetch(`http://localhost:8080/bookingDates/${rentalBookingPackage.id}`, {
+                    method: "DELETE"
+                })
+                    .then(() => navigate(`/create`))
+            }}>Delete
+        </button>
+    }
+
 
     let price = totalCost(rentalPackage?.light?.lightCost, hourlyCost(rentalPackage?.bookingDate?.totalHours))
     let from = timeFormat(rentalPackage?.bookingDate?.startTime)
     let until = timeFormat(rentalPackage?.bookingDate?.endTime)
-    let dateBooked = new Date(rentalPackage?.bookingDate?.date).toLocaleDateString()
+    let dateBooked = new Date(rentalPackage?.bookingDate?.date).toLocaleDateString('en-US', { timeZone: 'UTC' })
     let name = rentalPackage?.user?.name
+    let startTime = timeFunc(rentalPackage?.bookingDate?.startTime)
+    let endTime = timeFunc(rentalPackage?.bookingDate?.endTime)
 
     return <>
         <h2>This will be checkout</h2>
@@ -72,7 +103,7 @@ export const CheckOutPage = () => {
 
                 <section key={rentalPackage.id}>
                     <div value={rentalPackage.id}>
-                        {name} has requested to book Texture Creative Studio for {dateBooked} from {from} until {until}</div>
+                        {name} has requested to book Texture Creative Studio for {dateBooked} from {from}{startTime} until {until}{endTime}</div>
                     <div value={rentalPackage.id}>Price: ${price}</div>
                 </section>
 
@@ -87,8 +118,9 @@ export const CheckOutPage = () => {
                     () => {
                         const copy = { ...rentalPackage }
                         copy.eSign = true
+                        copy.totalCost = price
                         setPackage(copy)
-                        
+
                     }
                 }>I'm Liable</button>
 
@@ -98,10 +130,17 @@ export const CheckOutPage = () => {
         </article>
 
         <button onClick={(evt) => {
-            updateSignature(rentalPackage)
-            .then( () => navigate("/confirmation"))
-            } }>Send Request</button>
-        
+            navigate(`/edit/${id}`)
+        }}>Edit</button>
+
+        <button onClick={(evt) => {
+            sendRequest(rentalPackage)
+                .then(() => navigate(`/confirmation/${id}`))
+        }}>Send Request</button>
+
+        {DeleteButton()}
+
+
 
     </>
 

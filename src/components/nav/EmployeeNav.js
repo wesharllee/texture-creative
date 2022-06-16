@@ -15,10 +15,6 @@ export const EmployeeNavBar = () => {
             </li>
 
             <li className="navbar__item active">
-                <Link className="navbar__link" to="/checkout">checkout</Link>
-            </li>
-
-            <li className="navbar__item active">
                 <Link className="navbar__link" to="/employeelounge">employeelounge</Link>
             </li>
             

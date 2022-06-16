@@ -1,85 +1,90 @@
 import { useEffect, useState } from "react"
-import { useNavigate } from "react-router-dom"
+import { useNavigate, useParams } from "react-router-dom"
 
 
-export const CreatePage = () => {
-    const localTextureUser = localStorage.getItem("texture_user")
-    const textureUserObject = JSON.parse(localTextureUser)
-    const Navigate = useNavigate()
-    
-    const [newRental, updateRental] = useState({
 
-        userId: textureUserObject.id,
-        bookingDateId: 0,
-        backdropId: 0,
-        propId: 0,
-        furnitureId: 0,
-        lightId: 0,
-        totalcost: 0
+
+export const EditPage = () => {
+    const { id } = useParams()
+
+
+    const [rentalPackage, updatePackage] = useState({
+        id: "",
+        userId: "",
+        bookingDateId: "",
+        backdropId: "",
+        propId: "",
+        furnitureId: "",
+        lightId: "",
+        totalCost: "",
+        eSign: ""
 
     })
-
-    const [newBooking, updateBooking] = useState({
-
+    const [rentalBookingPackage, updateRentalBooking] = useState({
+        id: "",
         date: "",
-        startTime: "00:00",
-        endTime: "00:00",
-        totalHours: 0
+        startTime: "",
+        endTime: "",
+        totalHours: ""
     })
+    const navigate = useNavigate()
+
     const [backdrops, setBackdrops] = useState([])
     const [props, setProps] = useState([])
     const [furnitures, setFurnitures] = useState([])
     const [lights, setLights] = useState([])
-   
 
-
-    const minus = (startHour, endHour) => { 
+    const minus = (startHour, endHour) => {
         let result = endHour - startHour
         return result
     }
 
+    const editButtonClick = (clickEvent, rentalPackage, rentalBookingPackage) => {
+        clickEvent.preventDefault()
 
-    const bookButtonClick = (event) => {
-        event.preventDefault()
-
-
-
-        return fetch(`http://localhost:8080/bookingDates`, {
-            method: "POST",
+        fetch(`http://localhost:8080/bookingDates/${id}`, {
+            method: "PUT",
             headers: {
                 "Content-Type": "application/json"
             },
-            body: JSON.stringify(newBooking)
+            body: JSON.stringify(rentalBookingPackage)
         })
             .then(response => response.json())
-            .then((newRentalObj) => {
-                const RentalPackage = {
-                    userId: textureUserObject.id,
-                    bookingDateId: newRentalObj.id,
-                    backdropId: newRental.backdropId,
-                    propId: newRental.propId,
-                    furnitureId: newRental.furnitureId,
-                    lightId: newRental.lightId,
-                    totalCost: 0,
-                    eSign: false
-                }
-                fetch(`http://localhost:8080/rentalPackages`, {
-                    method: "POST",
+            .then(() => {
+                fetch(`http://localhost:8080/rentalPackages/${id}`, {
+                    method: "PUT",
                     headers: {
                         "Content-Type": "application/json"
                     },
-                    body: JSON.stringify(RentalPackage)
+                    body: JSON.stringify(rentalPackage)
                 })
                     .then(response => response.json())
-                    .then((response) => {
-                        Navigate(`/checkout/${response.id}`)
-                    })
+                    .then(() => { navigate(`/checkout/${id}`) })
             })
     }
 
+    useEffect(
+        () => {
+            fetch(`http://localhost:8080/rentalPackages/${id}`)
+                .then(response => response.json())
+                .then((packageObj) => {
+                    updatePackage(packageObj)
+                })
 
+        },
+        [id]
+    )
+    useEffect(
+        () => {
+            fetch(`http://localhost:8080/bookingDates/${id}`)
+                .then(response => response.json())
+                .then((packageObj) => {
+                    updateRentalBooking(packageObj)
+                })
 
-
+        },
+        [id]
+    )
     useEffect(
         () => {
             fetch(`http://localhost:8080/backdrops`)
@@ -124,9 +129,6 @@ export const CreatePage = () => {
         []
     )
 
-    
-
-
 
     return (
         <form className="createPage">
@@ -134,12 +136,12 @@ export const CreatePage = () => {
             <fieldset>
                 <div className="create-group">
                     <label htmlFor="backdrops">Choose Backdrops:</label>
-                    <select value={newRental.backdropId}
+                    <select value={rentalPackage.backdropId}
                         onChange={
                             (event) => {
-                                const copy = { ...newRental }
+                                const copy = { ...rentalPackage }
                                 copy.backdropId = parseInt(event.target.value)
-                                updateRental(copy)
+                                updatePackage(copy)
                             }
                         }>
                         <option value="0">Please Select Backdrops</option>
@@ -152,12 +154,12 @@ export const CreatePage = () => {
             <fieldset>
                 <div className="create-group">
                     <label htmlFor="props">Choose Props:</label>
-                    <select value={newRental.propId}
+                    <select value={rentalPackage.propId}
                         onChange={
                             (event) => {
-                                const copy = { ...newRental }
+                                const copy = { ...rentalPackage }
                                 copy.propId = parseInt(event.target.value)
-                                updateRental(copy)
+                                updatePackage(copy)
                             }
                         }>
                         <option value="0">Please Select Props</option>
@@ -170,17 +172,17 @@ export const CreatePage = () => {
             <fieldset>
                 <div className="create-group">
                     <label htmlFor="furnitures">Choose Furniture:</label>
-                    <select value={newRental.furnitureId}
+                    <select value={rentalPackage.furnitureId}
                         onChange={
                             (event) => {
-                                const copy = { ...newRental }
+                                const copy = { ...rentalPackage }
                                 copy.furnitureId = parseInt(event.target.value)
-                                updateRental(copy)
+                                updatePackage(copy)
                             }
                         }>
                         <option value="0" >Please Select Furniture</option>
                         {furnitures.map((furniture) => {
-                            return <option key = {furniture.id} value={furniture.id}> {furniture.name} {furniture.image} </option>
+                            return <option key={furniture.id} value={furniture.id}> {furniture.name} {furniture.image} </option>
                         })}
                     </select>
                 </div>
@@ -188,17 +190,17 @@ export const CreatePage = () => {
             <fieldset>
                 <div className="create-group">
                     <label htmlFor="lights">Choose Lights:</label>
-                    <select value={newRental.lightId}
+                    <select value={rentalPackage.lightId}
                         onChange={
                             (event) => {
-                                const copy = { ...newRental }
+                                const copy = { ...rentalPackage }
                                 copy.lightId = parseInt(event.target.value)
-                                updateRental(copy)
+                                updatePackage(copy)
                             }
                         }>
                         <option value="0">Please Select Lights</option>
                         {lights.map((light) => {
-                            return <option key= {light.id} value={light.id}> {light.name} {light.image} </option>
+                            return <option key={light.id} value={light.id}> {light.name} {light.image} </option>
                         })}
                     </select>
                 </div>
@@ -210,12 +212,12 @@ export const CreatePage = () => {
                         required autoFocus
                         type="date"
                         className="form-control"
-                        value={newBooking.date}
+                        value={rentalBookingPackage.date}
                         onChange={
                             (evt) => {
-                                const copy = { ...newBooking }
+                                const copy = { ...rentalBookingPackage }
                                 copy.date = evt.target.value
-                                updateBooking(copy)
+                                updateRentalBooking(copy)
                             }
                         } />
                 </div>
@@ -227,12 +229,12 @@ export const CreatePage = () => {
                         required autoFocus
                         type="time"
                         className="form-control"
-                        value={newBooking.startTime}
+                        value={rentalBookingPackage.startTime}
                         onChange={
                             (evt) => {
-                                const copy = { ...newBooking }
+                                const copy = { ...rentalBookingPackage }
                                 copy.startTime = evt.target.value
-                                updateBooking(copy)
+                                updateRentalBooking(copy)
                             }
                         } />
                 </div>
@@ -244,24 +246,26 @@ export const CreatePage = () => {
                         required autoFocus
                         type="time"
                         className="form-control"
-                        value={newBooking.endTime}
+                        value={rentalBookingPackage.endTime}
                         onChange={
                             (evt) => {
-                                const copy = { ...newBooking }
+                                const copy = { ...rentalBookingPackage }
                                 copy.endTime = evt.target.value
                                 copy.totalHours = minus(parseFloat(copy.startTime, 2), parseFloat(copy.endTime, 2))
-                                updateBooking(copy)
+                                updateRentalBooking(copy)
                             }
                         } />
                 </div>
             </fieldset>
             <button
-                onClick={(clickEvent) => bookButtonClick(clickEvent)}
-                className="btn btn-primary">
-                Book Your Session
+                onClick={(clickEvent) => editButtonClick(clickEvent, rentalPackage, rentalBookingPackage)}
+                className="package__edit">
+                Confirm Edits
             </button>
         </form >
     )
-}
 
+
+
+}
 
