@@ -5,7 +5,7 @@ import "./Login.css"
 export const Register = (props) => {
     const [customer, setCustomer] = useState({
         email: "",
-        fullName: "",
+        name: "",
         isStaff: false
     })
     let navigate = useNavigate()
@@ -26,7 +26,7 @@ export const Register = (props) => {
                         staff: createdUser.isStaff
                     }))
 
-                    navigate("/")
+                    navigate("/login")
                 }
             })
     }
@@ -60,7 +60,7 @@ export const Register = (props) => {
                 <fieldset>
                     <label htmlFor="fullName"> Full Name </label>
                     <input onChange={updateCustomer}
-                           type="text" id="fullName" className="form-control"
+                           type="text" id="name" className="form-control"
                            placeholder="Enter your name" required autoFocus />
                 </fieldset>
                 <fieldset>
@@ -70,6 +70,12 @@ export const Register = (props) => {
                         placeholder="Email address" required />
                 </fieldset>
                 <fieldset>
+                    <label htmlFor="phoneNumber"> Phone Number </label>
+                    <input onChange={updateCustomer}
+                        type="phoneNumber" id="phoneNumber" className="form-control"
+                        placeholder="xxx-xxx-xxxx" required />
+                </fieldset>
+                {/* <fieldset>
                     <input onChange={(evt) => {
                         const copy = {...customer}
                         copy.isStaff = evt.target.checked
@@ -77,7 +83,7 @@ export const Register = (props) => {
                     }}
                         type="checkbox" id="isStaff" />
                     <label htmlFor="email"> I am an employee </label>
-                </fieldset>
+                </fieldset> */}
                 <fieldset>
                     <button type="submit"> Register </button>
                 </fieldset>

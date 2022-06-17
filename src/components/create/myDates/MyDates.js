@@ -86,7 +86,7 @@ export const MyDatesPage = () => {
 
 
 
-        <section key={myUser?.id}>Hello {myUser[0]?.name}! Here are your requests:</section>
+        <section key={myUser?.id}>Hello {myUser[0]?.name}! Here are your booking requests:</section>
 
         <article>
             <div className="confirmation_dateBooked">

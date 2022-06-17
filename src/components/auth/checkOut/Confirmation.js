@@ -80,6 +80,7 @@ export const ConfirmationPage = () => {
 
 
             <button onClick={() => navigate("/home")} >Home</button>
+            <button onClick={() => navigate("/mydates")} >My Dates</button>
 
 
 
