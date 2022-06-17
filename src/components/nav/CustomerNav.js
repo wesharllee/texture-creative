@@ -13,6 +13,10 @@ export const CustomerNavBar = () => {
                 <Link className="navbar__link" to="/create">create</Link>
             </li>
             
+            <li className="navbar__item active">
+                <Link className="navbar__link" to="/mydates">mydates</Link>
+            </li>
+            
             {
                 localStorage.getItem("texture_user")
                     ? <li className="navbar__item navbar__logout">

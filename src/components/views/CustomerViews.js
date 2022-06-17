@@ -3,8 +3,9 @@ import { CheckOutPage } from "../auth/checkOut/CheckOut"
 import { ConfirmationPage } from "../auth/checkOut/Confirmation"
 import { CreatePage } from "../create/Create"
 import { EditPage } from "../create/Edit"
+import { MyDatesPage } from "../create/myDates/MyDates"
 import { HomePage } from "../home/HomePage"
-import { LandingPage } from "../landing/LandingPage"
+
 
 export const CustomerViews = () => {
     return (
@@ -23,6 +24,7 @@ export const CustomerViews = () => {
                 <Route path="checkout/:id" element={<CheckOutPage />} />
                 <Route path="confirmation/:id" element={<ConfirmationPage />} />
                 <Route path="edit/:id" element={<EditPage />} />
+                <Route path="mydates" element={<MyDatesPage />} />
 
 
 
