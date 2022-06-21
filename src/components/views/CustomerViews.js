@@ -1,10 +1,11 @@
 import { Outlet, Route, Routes } from "react-router-dom"
-import { CheckOutPage } from "../auth/checkOut/CheckOut"
-import { ConfirmationPage } from "../auth/checkOut/Confirmation"
+import { CheckOutPage } from "../checkOut/CheckOut"
+import { ConfirmationPage } from "../checkOut/Confirmation"
 import { CreatePage } from "../create/Create"
 import { EditPage } from "../create/Edit"
 import { MyDatesPage } from "../create/myDates/MyDates"
 import { HomePage } from "../home/HomePage"
+import { LightsPage } from "../lights/Lights"
 
 
 export const CustomerViews = () => {
@@ -25,6 +26,7 @@ export const CustomerViews = () => {
                 <Route path="confirmation/:id" element={<ConfirmationPage />} />
                 <Route path="edit/:id" element={<EditPage />} />
                 <Route path="mydates" element={<MyDatesPage />} />
+                <Route path="lights" element={<LightsPage />} />
 
 
 

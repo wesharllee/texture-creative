@@ -180,7 +180,7 @@ export const CreatePage = () => {
                         }>
                         <option value="0" >Please Select Furniture</option>
                         {furnitures.map((furniture) => {
-                            return <option key = {furniture.id} value={furniture.id}> {furniture.name} {furniture.image} </option>
+                            return <option key = {furniture.id} value={furniture.id}> {furniture.name} {furniture.image} </option> 
                         })}
                     </select>
                 </div>

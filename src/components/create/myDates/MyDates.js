@@ -8,7 +8,7 @@ export const MyDatesPage = () => {
     const [rentalPackages, setPackages] = useState([])
     const [filteredPackages, setFiltered] = useState([])
     const [users, setUsers] = useState([])
-    const [myUser, setMyUser] = useState([])
+    const [myUser, setMyUser] = useState({})
     useEffect(
         () => {
             fetch(`http://localhost:8080/rentalPackages/?_expand=bookingDate&_expand=light&_expand=user`)
@@ -41,7 +41,7 @@ export const MyDatesPage = () => {
 
     useEffect(
         () => {
-            const user = users.filter(user => user?.id === textureUserObject?.id)
+            const user = users.find(user => user?.id === textureUserObject?.id)
             setMyUser(user)
         },
         [users]
@@ -86,7 +86,7 @@ export const MyDatesPage = () => {
 
 
 
-        <section key={myUser?.id}>Hello {myUser[0]?.name}! Here are your booking requests:</section>
+        <section key={myUser?.id}>Hello {myUser?.name}! Here are your booking requests:</section>
 
         <article>
             <div className="confirmation_dateBooked">
