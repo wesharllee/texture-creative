@@ -5,6 +5,8 @@ import { CreatePage } from "../create/Create"
 import { EditPage } from "../create/Edit"
 import { EmployeeLoungePage } from "../employeeLounge/EmployeeLounge"
 import { HomePage } from "../home/HomePage"
+import { LightsPage } from "../lights/Lights"
+
 
 
 export const EmployeeViews = () => {
@@ -25,6 +27,7 @@ export const EmployeeViews = () => {
                 <Route path="confirmation/:id" element={<ConfirmationPage />} />
                 <Route path="edit/:id" element={<EditPage />} />
                 <Route path="employeelounge" element={<EmployeeLoungePage />} />
+                <Route path="lights" element={<LightsPage />} />
 
 
                 

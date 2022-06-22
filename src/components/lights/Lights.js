@@ -1,52 +1,200 @@
 import Select from 'react-select'
 import { useEffect, useState } from 'react'
+import { useNavigate } from 'react-router-dom'
 
-
+//send page
 export const LightsPage = () => {
+  //get current user based on login
+  const localTextureUser = localStorage.getItem("texture_user")
+  const textureUserObject = JSON.parse(localTextureUser)
+  //function to navigate to other pages
+  const Navigate = useNavigate()
 
-  //     const localTextureUser = localStorage.getItem("texture_user")
-  //     const textureUserObject = JSON.parse(localTextureUser)
+  //create setter function to call variables from my json database w/ use state for each 
+  //option class users can choose from
   const [backdrops, setBackdrops] = useState([])
   const [props, setProps] = useState([])
   const [furnitures, setFurnitures] = useState([])
   const [lights, setLights] = useState([])
-  // const [selectedOption, setSelectedOption] = useState([])
-  const [selectedBackdropOption, setSelectedBackdropOption] = useState([])
-  const [selectedPropOption, setSelectedPropOption] = useState([])
-  const [selectedFurnitureOption, setSelectedFurnitureOption] = useState([])
-  const [selectedLightOption, setSelectedLightOption] = useState([])
+
+  //create setter functions to copy initial user options and add label and value to state for multi-select
   const [backdropChoices, setBackdropChoices] = useState([])
   const [propChoices, setPropChoices] = useState([])
   const [furnitureChoices, setFurnitureChoices] = useState([])
   const [lightChoices, setLightChoices] = useState([])
-  // const handleChange = e => {
-  //   setSelectedOption(e);
-  // }
-  const handleBackdropChange = e => {
-    setSelectedBackdropOption(e)
+
+  //create setter functions to send chosen options to state
+  const [selectedBackdropOptions, setSelectedBackdropOption] = useState([])
+  const [selectedPropOptions, setSelectedPropOption] = useState([])
+  const [selectedFurnitureOptions, setSelectedFurnitureOption] = useState([])
+  const [selectedLightOptions, setSelectedLightOption] = useState([])
+
+
+  //when multiple-dropdown-option is selected create setter function for chosen option in state
+  const handleBackdropChange = evt => {
+    setSelectedBackdropOption(evt)
   }
-  const handlePropChange = e => {
-    setSelectedPropOption(e)
+  const handlePropChange = evt => {
+    setSelectedPropOption(evt)
   }
-  const handleFurnitureChange = e => {
-    setSelectedFurnitureOption(e)
+  const handleFurnitureChange = evt => {
+    setSelectedFurnitureOption(evt)
   }
-  const handleLightChange = e => {
-    setSelectedLightOption(e)
+  const handleLightChange = evt => {
+    setSelectedLightOption(evt)
   }
 
-  //     const [newRental, updateRental] = useState({
+  //create setter function to create a new object to send to my database
+  //add initial state (date, startTime, endTime, totalHours)
+  const [newBooking, updateBooking] = useState({
+    date: "",
+    startTime: "00:00",
+    endTime: "00:00",
+    totalHours: 0
+  })
 
-  //         userId: textureUserObject.id,
-  //         bookingDateId: 0,
-  //         backdropId: 0,
-  //         propId: 0,
-  //         furnitureId: 0,
-  //         lightId: 0,
-  //         totalcost: 0
 
-  //     })
 
+  //create button to push all chosen options
+  const bookButtonClick = (event) => {
+    event.preventDefault()
+
+
+    //create functions to hold return fetch posts for all user option packages
+    const createBackdropPackagePost = (backdropPackageObj) => {
+      return fetch(`http://localhost:8080/backdroppackages`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json"
+        },
+        body: JSON.stringify(backdropPackageObj)
+      })
+    }
+
+    const createPropPackagePost = (propPackageObj) => {
+      return fetch(`http://localhost:8080/proppackages`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json"
+        },
+        body: JSON.stringify(propPackageObj)
+      })
+    }
+
+    const createFurniturePackagePost = (furniturePackageObj) => {
+      return fetch(`http://localhost:8080/furniturepackages`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json"
+        },
+        body: JSON.stringify(furniturePackageObj)
+      })
+    }
+
+    const createLightPackagePost = (lightPackageObj) => {
+      return fetch(`http://localhost:8080/lightpackages`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json"
+        },
+        body: JSON.stringify(lightPackageObj)
+      })
+    }
+
+    //create fetch post to create bookingDate and get the bookingDateId
+    return fetch(`http://localhost:8080/bookingDates`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json"
+      },
+      //update newBooking from newBooking setter function in database
+      body: JSON.stringify(newBooking)
+    })
+      //get my response from json for what was my bookingDate object
+      .then(response => response.json())
+      //create new variable with bookingDate objects information
+      .then((newBookingObj) => {
+        //create new rental package to send to state
+        const RentalPackage = {
+          //get user id from initial login information
+          userId: textureUserObject.id,
+          //get bookingDateId from my json response variable
+          bookingDateId: newBookingObj.id,
+          //create initial cost state
+          totalCost: 0,
+          //initial signature === false. They have not signed
+          eSign: false
+        }
+        fetch(`http://localhost:8080/rentalPackages`, {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json"
+          },
+          //update rentalPackage in database
+          body: JSON.stringify(RentalPackage)
+        })
+          //get my response from json for what was my RentalPackage object
+          .then(response => response.json())
+          //create new variable with RentalPackage objects information
+          .then((newRentalPackage) => {
+
+            //create array to hold promises for promise.all function
+            const promArray = []
+
+            //iterate through each option of options
+            for (const selectedBackdropOption of selectedBackdropOptions) {
+              //create new object for optionPackage
+              const backdropPackage = {
+                //get rentalPackageId from json newRentalPackage variable Id
+                rentalPackageId: newRentalPackage.id,
+                //get backdropId from iterated option
+                backdropId: selectedBackdropOption.id
+              }
+              //create new variable to hold fetch post function and pass new optionPackage object
+              const backdropPost = createBackdropPackagePost(backdropPackage)
+              //push to promise array
+              promArray.push(backdropPost)
+            }
+
+            for (const selectedPropOption of selectedPropOptions) {
+              const propPackage = {
+                rentalPackageId: newRentalPackage.id,
+                propId: selectedPropOption.id
+              }
+              const propPost = createPropPackagePost(propPackage)
+              promArray.push(propPost)
+            }
+
+            for (const selectedFurnitureOption of selectedFurnitureOptions) {
+              const furniturePackage = {
+                rentalPackageId: newRentalPackage.id,
+                furnitureId: selectedFurnitureOption.id
+              }
+              const furniturePost = createFurniturePackagePost(furniturePackage)
+              promArray.push(furniturePost)
+            }
+
+            for (const selectedLightOption of selectedLightOptions) {
+              const lightPackage = {
+                rentalPackageId: newRentalPackage.id,
+                lightId: selectedLightOption.id
+              }
+              const lightPost = createLightPackagePost(lightPackage)
+              promArray.push(lightPost)
+            }
+
+            //create a promise.all function and pass promise array through it
+            Promise.all(promArray)
+              //call back function containing Navigate (useNavigate())
+              .then(() => {
+                //navigate to the checkout page for current rental package
+                Navigate(`/checkout/${newRentalPackage.id}`)
+              })
+          })
+      })
+  }
+
+  //get options from json using setter functions at top of page
   useEffect(
     () => {
       fetch(`http://localhost:8080/backdrops`)
@@ -92,7 +240,8 @@ export const LightsPage = () => {
   )
 
 
-  
+  //in order to use multi choice dropdown menu we need id === value and name === label
+  //create functions to achieve this and push into a setter function
   const backdropRename = () => {
     let options = []
     for (const backdrop of backdrops) {
@@ -102,14 +251,14 @@ export const LightsPage = () => {
     }
     setBackdropChoices(options)
   }
-  
+  //useEffect function to watch for initial option variable and utilize created rename function
   useEffect(
     () => {
       backdropRename()
     }, [backdrops]
   )
 
-  
+
   const propRename = () => {
     let options = []
     for (const prop of props) {
@@ -119,7 +268,7 @@ export const LightsPage = () => {
     }
     setPropChoices(options)
   }
-  
+
   useEffect(
     () => {
       propRename()
@@ -136,7 +285,7 @@ export const LightsPage = () => {
     }
     setFurnitureChoices(options)
   }
-  
+
   useEffect(
     () => {
       furnitureRename()
@@ -144,7 +293,6 @@ export const LightsPage = () => {
     [furnitures]
   )
 
-  
   const lightRename = () => {
     let options = []
     for (const light of lights) {
@@ -154,194 +302,151 @@ export const LightsPage = () => {
     }
     setLightChoices(options)
   }
-  
+
   useEffect(
     () => {
       lightRename()
     },
     [lights]
   )
-  //     // return (
-  //     // );
-  //   const lights = [
-  //     {
-  //       id: 0,
-  //       value: 0,
-  //       name: "none",
-  //       label: "none"
 
-  //     },
-  //     {
-  //       id: 1,
-  //       value: 1,
-  //       name: "camera lights",
-  //       label: "camera lights"
-
-  //     },
-  //     {
-  //       id: 2,
-  //       value: 2,
-  //       name: "LED's",
-  //       label: "LED's"
-  //     },
-  // ]
-
-
-
-
-
-
-
-
-
-
-  const data = [
-    {
-      value: 1,
-      label: "cerulean"
-    },
-    {
-      value: 2,
-      label: "fuchsia rose"
-    },
-    {
-      value: 3,
-      label: "true red"
-    },
-    {
-      value: 4,
-      label: "aqua sky"
-    },
-    {
-      value: 5,
-      label: "tigerlily"
-    },
-    {
-      value: 6,
-      label: "blue turquoise"
-    }
-  ]
-
-
-
-
-
-
-
-
-
-
+  //function to subtract startTime from endTime
+  const minus = (startHour, endHour) => {
+    let result = endHour - startHour
+    return result
+  }
 
 
   return (
-    <>
+    <form>
+
       <h2>MULTISELECT MOFO</h2>
-      {/* <div className="App">
+
+      <fieldset>
+        <div>
           <Select
-            defaultValue={[lights[1], lights[2]]}
             isMulti
-            name="lights"
-            options={lights}
-            className="basic-multi-select"
-            classNamePrefix="select"
-          /> */}
+            placeholder="Please Select Backdrops"
+            //capture selected option
+            value={selectedBackdropOptions}
+            //use the variable option that has been copied w/ added value and label
+            options={backdropChoices}
+            //onChange create a function to call setter function for selected option
+            onChange={handleBackdropChange}
+          />
+          {/* display selected option inside of multi-select dropdown menu */}
+          {selectedBackdropOptions && <div style={{ marginTop: 20, lineHeight: '25px' }}>
+          </div>}
+        </div>
+      </fieldset>
 
-      {/* <Select options={lights}
-            /> */}
-      <div>
-        <Select
-          isMulti
-          placeholder="Please Select Backdrops"
-          value={selectedBackdropOption}
-          options={backdropChoices}
-          onChange={handleBackdropChange}
-        />
+      <fieldset>
+        <div>
+          <Select
+            isMulti
+            placeholder="Please Select Props"
+            value={selectedPropOptions}
+            options={propChoices}
+            onChange={handlePropChange}
+          />
 
-        {selectedBackdropOption && <div style={{ marginTop: 20, lineHeight: '25px' }}>
-          {/* <b>Selected Options</b><br />
-          <pre>{JSON.stringify(selectedLightOption.name)}</pre> */}
-        </div>}
-      </div>
+          {selectedPropOptions && <div style={{ marginTop: 20, lineHeight: '25px' }}>
+          </div>}
+        </div>
+      </fieldset>
 
+      <fieldset>
+        <div>
+          <Select
+            isMulti
+            placeholder="Please Select Furniture"
+            value={selectedFurnitureOptions}
+            options={furnitureChoices}
+            onChange={handleFurnitureChange}
+          />
 
-      <div>
-        <Select
-          isMulti
-          placeholder="Please Select Props"
-          value={selectedPropOption}
-          options={propChoices}
-          onChange={handlePropChange}
-        />
+          {selectedFurnitureOptions && <div style={{ marginTop: 20, lineHeight: '25px' }}>
+          </div>}
+        </div>
+      </fieldset>
 
-        {selectedPropOption && <div style={{ marginTop: 20, lineHeight: '25px' }}>
-          {/* <b>Selected Options</b><br />
-          <pre>{JSON.stringify(selectedLightOption.name)}</pre> */}
-        </div>}
-      </div>
+      <fieldset>
+        <div>
+          <Select
+            isMulti
+            placeholder="Please Select Lights"
+            value={selectedLightOptions}
+            options={lightChoices}
+            onChange={handleLightChange}
+          />
 
-      <div>
-        <Select
-          isMulti
-          placeholder="Please Select Furniture"
-          value={selectedFurnitureOption}
-          options={furnitureChoices}
-          onChange={handleFurnitureChange}
-        />
+          {selectedLightOptions && <div style={{ marginTop: 20, lineHeight: '25px' }}>
+          </div>}
+        </div>
+      </fieldset>
 
-        {selectedFurnitureOption && <div style={{ marginTop: 20, lineHeight: '25px' }}>
-          {/* <b>Selected Options</b><br />
-          <pre>{JSON.stringify(selectedLightOption.name)}</pre> */}
-        </div>}
-      </div>
-
-
-      <div>
-        <Select
-          isMulti
-          placeholder="Please Select Lights"
-          value={selectedLightOption}
-          options={lightChoices}
-          onChange={handleLightChange}
-        />
-
-        {selectedLightOption && <div style={{ marginTop: 20, lineHeight: '25px' }}>
-          {/* <b>Selected Options</b><br />
-          <pre>{JSON.stringify(selectedLightOption.name)}</pre> */}
-        </div>}
-      </div>
-
-      {/* <div className="App">
-
-
-        <Select
-          isMulti
-          placeholder="Select Option"
-          value={selectedOption} // set selected value
-          options={data} // set list of the data
-          onChange={handleChange} // assign onChange function
-        />
-
-        {selectedOption && <div style={{ marginTop: 20, lineHeight: '25px' }}>
-          <b>Selected Options</b><br />
-          <pre>{JSON.stringify(selectedOption, null, 2)}</pre>
-        </div>}
-      </div> */}
-      {/* <select value={newRental.lightId}
+      <fieldset>
+        <div className="form-group">
+          <label htmlFor="book__date">Book Date:</label>
+          <input
+            required autoFocus
+            type="date"
+            className="form-control"
+            value={newBooking.date}
             onChange={
-                (event) => {
-                    const copy = { ...newRental }
-                    copy.lightId = parseInt(event.target.value)
-                    updateRental(copy)
-                }
-            }>
-            <option value="0">Please Select Lights</option>
-            {lights.map((light) => {
-                return <option key={light.id} value={light.id}> {light.name} {light.image} </option>
-            })}
-        </select> */}
-      {/* </div> */}
-    </>
+              (evt) => {
+                const copy = { ...newBooking }
+                copy.date = evt.target.value
+                updateBooking(copy)
+              }
+            } />
+        </div>
+      </fieldset>
 
+      <fieldset>
+        <div className="form-group">
+          <label htmlFor="book__startTime">Start Time:</label>
+          <input
+            required autoFocus
+            type="time"
+            className="form-control"
+            value={newBooking.startTime}
+            onChange={
+              (evt) => {
+                const copy = { ...newBooking }
+                copy.startTime = evt.target.value
+                updateBooking(copy)
+              }
+            } />
+        </div>
+      </fieldset>
+
+      <fieldset>
+        <div className="form-group">
+          <label htmlFor="book__endTime">End Time:</label>
+          <input
+            required autoFocus
+            type="time"
+            className="form-control"
+            value={newBooking.endTime}
+            onChange={
+              (evt) => {
+                const copy = { ...newBooking }
+                copy.endTime = evt.target.value
+                copy.totalHours = minus(parseFloat(copy.startTime, 2), parseFloat(copy.endTime, 2))
+                updateBooking(copy)
+              }
+            } />
+        </div>
+      </fieldset>
+      
+      {/* call back button click function inside of displayed button */}
+      <button
+        onClick={(clickEvent) => bookButtonClick(clickEvent)}
+        className="btn btn-primary">
+        Book Your Session
+      </button>
+    </form>
   )
 
 }
