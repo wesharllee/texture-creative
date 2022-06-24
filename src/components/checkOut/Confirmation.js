@@ -12,7 +12,7 @@ export const ConfirmationPage = () => {
 
     useEffect(
         () => {
-            fetch(`http://localhost:8080/rentalPackages/${id}?_expand=bookingDate&_expand=light&_expand=user`)
+            fetch(`http://localhost:8080/rentalPackages/${id}?_expand=bookingDate&_expand=user`)
                 .then(response => response.json())
                 .then((packageObj) => {
                     setPackage(packageObj)
@@ -32,27 +32,14 @@ export const ConfirmationPage = () => {
         }
     }
 
-    let hourlyCost = (hours) => {
-        let costOfHours = parseInt(hours) * 75
-        return costOfHours
-    }
-
-
-
-    let totalCost = (lightCost, hourCost) => {
-        let totalPrice = lightCost + hourCost
-        return totalPrice
-
-    }
-
     let timeFunc = (time) => {
         if (parseFloat(time, 2) > 12) {
-            return "PM"
+            return " PM"
         }
-        else return "AM"
+        else return " AM"
     }
 
-    let price = totalCost(rentalPackage?.light?.lightCost, hourlyCost(rentalPackage?.bookingDate?.totalHours))
+    let total = rentalPackage?.totalCost
     let from = timeFormat(rentalPackage?.bookingDate?.startTime)
     let until = timeFormat(rentalPackage?.bookingDate?.endTime)
     let dateBooked = new Date(rentalPackage?.bookingDate?.date).toLocaleDateString('en-US', { timeZone: 'UTC' })
@@ -71,7 +58,7 @@ export const ConfirmationPage = () => {
                 <section key={rentalPackage.id}>
                     <div value={rentalPackage.id}>
                         {name} has requested to book Texture Creative Studio for {dateBooked} from {from}{startTime} until {until}{endTime}</div>
-                    <div value={rentalPackage.id}>Price: ${price}</div>
+                    <div value={rentalPackage.id}>Price: ${total}</div>
                 </section>
 
             </div>

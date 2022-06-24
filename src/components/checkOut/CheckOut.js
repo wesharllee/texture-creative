@@ -7,8 +7,12 @@ import { useNavigate, useParams } from "react-router-dom"
 
 export const CheckOutPage = () => {
     const { id } = useParams()
+
+    const [lights, setLights] = useState({})
+    // const [lightPackage, setLightPackage] = useState({})
+    const [fullInfoRentalPackage, setFullInfoRentalPackage] = useState({})
     const [rentalPackage, setPackage] = useState({})
-    const [rentalBookingPackage, setRentalBooking] = useState({})
+    // const [rentalBookingPackage, setRentalBooking] = useState({})
     const navigate = useNavigate()
 
     const sendRequest = (rentalPackage) => {
@@ -22,23 +26,68 @@ export const CheckOutPage = () => {
 
     }
 
+    // useEffect(
+    //     () => {
+    //         fetch(`http://localhost:8080/bookingDates/${id}`)
+    //             .then(response => response.json())
+    //             .then((bookingPackageObj) => {
+    //                 setRentalBooking(bookingPackageObj)
+    //             })
+    //     },
+    //     [id]
+    // )
+
     useEffect(
         () => {
-            fetch(`http://localhost:8080/bookingDates/${id}`)
+            fetch(`http://localhost:8080/lights`)
                 .then(response => response.json())
-                .then((bookingPackageObj) => {
-                    setRentalBooking(bookingPackageObj)
+                .then((lights) => {
+                    setLights(lights)
+                })
+        },
+        []
+    )
+
+    useEffect(
+        () => {
+            fetch(`http://localhost:8080/rentalPackages/${id}?_expand=bookingDate&_expand=user`)
+                .then(response => response.json())
+                .then((packageObj) => {
+                    setPackage(packageObj)
                 })
         },
         [id]
     )
 
+    // useEffect(
+    //     () => {
+    //         fetch(`http://localhost:8080/lightpackages/?rentalPackageId=${id}&_expand=rentalPackage&_expand=bookingdate`)
+    //             .then(response => response.json())
+    //             .then((lightPackageObj) => {
+    //                 setLightPackage(lightPackageObj)
+    //             })
+
+    //     },
+    //     [id]
+    // )
+
+    // useEffect(
+    //     () => {
+    //         fetch(`http://localhost:8080/rentalPackages/${id}?_embed=backdropPackages&_embed=propPackages&_embed=furniturePackages&_embed=lightPackages`)
+    //             .then(response => response.json())
+    //             .then((rentalPackage) => {
+    //                 setFullInfoRentalPackage(rentalPackage)
+    //             })
+    //     },
+    //     [id]
+    // )
+
     useEffect(
         () => {
-            fetch(`http://localhost:8080/rentalPackages/${id}?_expand=bookingDate&_expand=light&_expand=user`)
+            fetch(`http://localhost:8080/rentalPackages/${id}?_embed=lightPackages`)
                 .then(response => response.json())
-                .then((packageObj) => {
-                    setPackage(packageObj)
+                .then((rentalPackage) => {
+                    setFullInfoRentalPackage(rentalPackage)
                 })
         },
         [id]
@@ -70,15 +119,15 @@ export const CheckOutPage = () => {
 
     let timeFunc = (time) => {
         if (parseFloat(time, 2) > 12) {
-            return "PM"
+            return " PM"
         }
-        else return "AM"
+        else return " AM"
     }
 
     const DeleteButton = () => {
         return <button
             onClick={() => {
-                fetch(`http://localhost:8080/bookingDates/${rentalBookingPackage.id}`, {
+                fetch(`http://localhost:8080/rentalPackages/${id}`, {
                     method: "DELETE"
                 })
                     .then(() => navigate(`/create`))
@@ -86,8 +135,25 @@ export const CheckOutPage = () => {
         </button>
     }
 
+    
+    const lightPriceFunc = (lightPackages) => {
+        let lightArray = []
+        for (const lightPackage of lightPackages) {
+            let newLightObj = lights.find(light => light.id === lightPackage.lightId)
+            lightArray.push(newLightObj)
+        }
+        let price = 0
+        for(const lightObj of lightArray) {
+            price += lightObj.lightCost
+        }
+        return price
+    }
 
-    let price = totalCost(rentalPackage?.light?.lightCost, hourlyCost(rentalPackage?.bookingDate?.totalHours))
+    
+
+    let hourPrice = hourlyCost(rentalPackage?.bookingDate?.totalHours)
+    let lightPrice = fullInfoRentalPackage.lightPackages ? lightPriceFunc(fullInfoRentalPackage?.lightPackages) : 0 
+    let total = totalCost(lightPrice, hourPrice)
     let from = timeFormat(rentalPackage?.bookingDate?.startTime)
     let until = timeFormat(rentalPackage?.bookingDate?.endTime)
     let dateBooked = new Date(rentalPackage?.bookingDate?.date).toLocaleDateString('en-US', { timeZone: 'UTC' })
@@ -104,7 +170,9 @@ export const CheckOutPage = () => {
                 <section key={rentalPackage.id}>
                     <div value={rentalPackage.id}>
                         {name} has requested to book Texture Creative Studio for {dateBooked} from {from}{startTime} until {until}{endTime}</div>
-                    <div value={rentalPackage.id}>Price: ${price}</div>
+                    <div value={rentalPackage.id}>Venue Rental: ${hourPrice} </div>
+                    <div value={rentalPackage.id}>Light Rental: ${lightPrice} </div>
+                    <div value={rentalPackage.id}>Total: ${total} </div>
                 </section>
 
 
@@ -118,7 +186,7 @@ export const CheckOutPage = () => {
                     () => {
                         const copy = { ...rentalPackage }
                         copy.eSign = true
-                        copy.totalCost = price
+                        copy.totalCost = total
                         setPackage(copy)
 
                     }

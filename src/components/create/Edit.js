@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react"
 import { useNavigate, useParams } from "react-router-dom"
+import Select from 'react-select'
 
 
 
@@ -12,10 +13,6 @@ export const EditPage = () => {
         id: "",
         userId: "",
         bookingDateId: "",
-        backdropId: "",
-        propId: "",
-        furnitureId: "",
-        lightId: "",
         totalCost: "",
         eSign: ""
 
@@ -34,13 +31,176 @@ export const EditPage = () => {
     const [furnitures, setFurnitures] = useState([])
     const [lights, setLights] = useState([])
 
+    const [backdropChoices, setBackdropChoices] = useState([])
+    const [propChoices, setPropChoices] = useState([])
+    const [furnitureChoices, setFurnitureChoices] = useState([])
+    const [lightChoices, setLightChoices] = useState([])
+
+    const [selectedBackdropOptions, setSelectedBackdropOption] = useState([])
+    const [selectedPropOptions, setSelectedPropOption] = useState([])
+    const [selectedFurnitureOptions, setSelectedFurnitureOption] = useState([])
+    const [selectedLightOptions, setSelectedLightOption] = useState([])
+
+    const [backdropPackages, setBackdropPackages] = useState([])
+    const [propPackages, setPropPackages] = useState([])
+    const [furniturePackages, setFurniturePackages] = useState([])
+    const [lightPackages, setLightPackages] = useState([])
+
+    const handleBackdropChange = evt => {
+        setSelectedBackdropOption(evt)
+    }
+    const handlePropChange = evt => {
+        setSelectedPropOption(evt)
+    }
+    const handleFurnitureChange = evt => {
+        setSelectedFurnitureOption(evt)
+    }
+    const handleLightChange = evt => {
+        setSelectedLightOption(evt)
+    }
+
     const minus = (startHour, endHour) => {
         let result = endHour - startHour
         return result
     }
 
+    useEffect(
+        () => {
+            fetch(`http://localhost:8080/backdropPackages`)
+                .then(response => response.json())
+                .then((packagesArray) => {
+                    setBackdropPackages(packagesArray)
+                })
+        },
+        []
+    )
+
+    useEffect(
+        () => {
+            fetch(`http://localhost:8080/propPackages`)
+                .then(response => response.json())
+                .then((packagesArray) => {
+                    setPropPackages(packagesArray)
+                })
+        },
+        []
+    )
+
+    useEffect(
+        () => {
+            fetch(`http://localhost:8080/furniturePackages`)
+                .then(response => response.json())
+                .then((packagesArray) => {
+                    setFurniturePackages(packagesArray)
+                })
+        },
+        []
+    )
+
+    useEffect(
+        () => {
+            fetch(`http://localhost:8080/lightPackages`)
+                .then(response => response.json())
+                .then((packagesArray) => {
+                    setLightPackages(packagesArray)
+                })
+        },
+        []
+    )
+
     const editButtonClick = (clickEvent, rentalPackage, rentalBookingPackage) => {
         clickEvent.preventDefault()
+
+        const backdropPutFunc = (packs) => {
+            for (const pack of packs) {
+                if (pack.rentalPackageId === rentalPackage.id) {
+                    fetch(`http://localhost:8080/backdropPackages/${pack.id}`, {
+                        method: "DELETE"
+                    })
+                }
+            }
+        }
+        const backdropDelete = backdropPutFunc(backdropPackages)
+
+        const propPutFunc = (packs) => {
+            for (const pack of packs) {
+                if (pack.rentalPackageId === rentalPackage.id) {
+                    fetch(`http://localhost:8080/propPackages/${pack.id}`, {
+                        method: "DELETE"
+                    })
+                }
+            }
+        }
+        const propDelete = propPutFunc(propPackages)
+
+        const furniturePutFunc = (packs) => {
+            for (const pack of packs) {
+                if (pack.rentalPackageId === rentalPackage.id) {
+                    fetch(`http://localhost:8080/furniturePackages/${pack.id}`, {
+                        method: "DELETE"
+                    })
+                }
+            }
+        }
+        const furnitureDelete = furniturePutFunc(furniturePackages)
+
+        const lightPutFunc = (packs) => {
+            for (const pack of packs) {
+                if (pack.rentalPackageId === rentalPackage.id) {
+                    fetch(`http://localhost:8080/lightPackages/${pack.id}`, {
+                        method: "DELETE"
+                    })
+                }
+            }
+        }
+        const lightDelete = lightPutFunc(lightPackages)
+
+
+
+
+        let deleteArray = [backdropDelete, propDelete, furnitureDelete, lightDelete]
+
+        const createBackdropPackagePost = (backdropPackageObj) => {
+            return fetch(`http://localhost:8080/backdroppackages`, {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json"
+                },
+                body: JSON.stringify(backdropPackageObj)
+            })
+        }
+
+        const createPropPackagePost = (propPackageObj) => {
+            return fetch(`http://localhost:8080/proppackages`, {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json"
+                },
+                body: JSON.stringify(propPackageObj)
+            })
+        }
+
+        const createFurniturePackagePost = (furniturePackageObj) => {
+            return fetch(`http://localhost:8080/furniturepackages`, {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json"
+                },
+                body: JSON.stringify(furniturePackageObj)
+            })
+        }
+
+        const createLightPackagePost = (lightPackageObj) => {
+            return fetch(`http://localhost:8080/lightpackages`, {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json"
+                },
+                body: JSON.stringify(lightPackageObj)
+            })
+        }
+
+        
 
         fetch(`http://localhost:8080/bookingDates/${id}`, {
             method: "PUT",
@@ -59,7 +219,61 @@ export const EditPage = () => {
                     body: JSON.stringify(rentalPackage)
                 })
                     .then(response => response.json())
-                    .then(() => { navigate(`/checkout/${id}`) })
+                    .then((newRentalPackage) => {
+                        Promise.all(deleteArray)
+
+                        let promArray = []
+                        //iterate through each option of options
+                        for (const selectedBackdropOption of selectedBackdropOptions) {
+                            //create new object for optionPackage
+                            const backdropPackage = {
+                                //get rentalPackageId from json newRentalPackage variable Id
+                                rentalPackageId: newRentalPackage.id,
+                                //get backdropId from iterated option
+                                backdropId: selectedBackdropOption.id
+                            }
+                            //create new variable to hold fetch post function and pass new optionPackage object
+                            const backdropPost = createBackdropPackagePost(backdropPackage)
+                            //push to promise array
+                            promArray.push(backdropPost)
+                        }
+
+                        for (const selectedPropOption of selectedPropOptions) {
+                            const propPackage = {
+                                rentalPackageId: newRentalPackage.id,
+                                propId: selectedPropOption.id
+                            }
+                            const propPost = createPropPackagePost(propPackage)
+                            promArray.push(propPost)
+                        }
+
+                        for (const selectedFurnitureOption of selectedFurnitureOptions) {
+                            const furniturePackage = {
+                                rentalPackageId: newRentalPackage.id,
+                                furnitureId: selectedFurnitureOption.id
+                            }
+                            const furniturePost = createFurniturePackagePost(furniturePackage)
+                            promArray.push(furniturePost)
+                        }
+
+                        for (const selectedLightOption of selectedLightOptions) {
+                            const lightPackage = {
+                                rentalPackageId: newRentalPackage.id,
+                                lightId: selectedLightOption.id
+                            }
+                            const lightPost = createLightPackagePost(lightPackage)
+                            promArray.push(lightPost)
+                        }
+
+                        //create a promise.all function and pass promise array through it
+                        Promise.all(promArray)
+                            //call back function containing Navigate (useNavigate())
+                            .then(() => {
+                                //navigate to the checkout page for current rental package
+                                navigate(`/checkout/${newRentalPackage.id}`)
+                            })
+                    })
+
             })
     }
 
@@ -87,7 +301,7 @@ export const EditPage = () => {
     )
     useEffect(
         () => {
-            fetch(`http://localhost:8080/backdrops`)
+            fetch(`http://localhost:8080/backdrops/?rentalPackageId=${id}`)
                 .then(response => response.json())
                 .then((backdropsArray) => {
                     setBackdrops(backdropsArray)
@@ -98,7 +312,7 @@ export const EditPage = () => {
 
     useEffect(
         () => {
-            fetch(`http://localhost:8080/props`)
+            fetch(`http://localhost:8080/props?rentalPackageId=${id}`)
                 .then(response => response.json())
                 .then((propsArray) => {
                     setProps(propsArray)
@@ -109,7 +323,7 @@ export const EditPage = () => {
 
     useEffect(
         () => {
-            fetch(`http://localhost:8080/furnitures`)
+            fetch(`http://localhost:8080/furnitures?rentalPackageId=${id}`)
                 .then(response => response.json())
                 .then((FurnituresArray) => {
                     setFurnitures(FurnituresArray)
@@ -120,7 +334,7 @@ export const EditPage = () => {
 
     useEffect(
         () => {
-            fetch(`http://localhost:8080/lights`)
+            fetch(`http://localhost:8080/lights?rentalPackageId=${id}`)
                 .then(response => response.json())
                 .then((lightsArray) => {
                     setLights(lightsArray)
@@ -129,82 +343,140 @@ export const EditPage = () => {
         []
     )
 
+    const backdropRename = () => {
+        let options = []
+        for (const backdrop of backdrops) {
+            backdrop.label = backdrop.name
+            backdrop.value = backdrop.id
+            options.push(backdrop)
+        }
+        setBackdropChoices(options)
+    }
+
+    useEffect(
+        () => {
+            backdropRename()
+        }, [backdrops]
+    )
+
+    const propRename = () => {
+        let options = []
+        for (const prop of props) {
+            prop.label = prop.name
+            prop.value = prop.id
+            options.push(prop)
+        }
+        setPropChoices(options)
+    }
+
+    useEffect(
+        () => {
+            propRename()
+        },
+        [props]
+    )
+
+    const furnitureRename = () => {
+        let options = []
+        for (const furniture of furnitures) {
+            furniture.label = furniture.name
+            furniture.value = furniture.id
+            options.push(furniture)
+        }
+        setFurnitureChoices(options)
+    }
+
+    useEffect(
+        () => {
+            furnitureRename()
+        },
+        [furnitures]
+    )
+
+    const lightRename = () => {
+        let options = []
+        for (const light of lights) {
+            light.label = light.name
+            light.value = light.id
+            options.push(light)
+        }
+        setLightChoices(options)
+    }
+
+    useEffect(
+        () => {
+            lightRename()
+        },
+        [lights]
+    )
 
     return (
         <form className="createPage">
             <h2 className="createPage__title">This will be create</h2>
+
             <fieldset>
-                <div className="create-group">
-                    <label htmlFor="backdrops">Choose Backdrops:</label>
-                    <select value={rentalPackage.backdropId}
-                        onChange={
-                            (event) => {
-                                const copy = { ...rentalPackage }
-                                copy.backdropId = parseInt(event.target.value)
-                                updatePackage(copy)
-                            }
-                        }>
-                        <option value="0">Please Select Backdrops</option>
-                        {backdrops.map((backdrop) => {
-                            return <option key={backdrop.id} value={backdrop.id}> {backdrop.name} {backdrop.image} </option>
-                        })}
-                    </select>
+                <div>
+                    <Select
+                        isMulti
+                        placeholder="Please Select Backdrops"
+                        //capture selected option
+                        value={selectedBackdropOptions}
+                        //use the variable option that has been copied w/ added value and label
+                        options={backdropChoices}
+                        //onChange create a function to call setter function for selected option
+                        onChange={handleBackdropChange}
+                    />
+                    {/* display selected option inside of multi-select dropdown menu */}
+                    {selectedBackdropOptions && <div style={{ marginTop: 20, lineHeight: '25px' }}>
+                    </div>}
                 </div>
             </fieldset>
+
             <fieldset>
-                <div className="create-group">
-                    <label htmlFor="props">Choose Props:</label>
-                    <select value={rentalPackage.propId}
-                        onChange={
-                            (event) => {
-                                const copy = { ...rentalPackage }
-                                copy.propId = parseInt(event.target.value)
-                                updatePackage(copy)
-                            }
-                        }>
-                        <option value="0">Please Select Props</option>
-                        {props.map((prop) => {
-                            return <option key={prop.id} value={prop.id}> {prop.name} {prop.image} </option>
-                        })}
-                    </select>
+                <div>
+                    <Select
+                        isMulti
+                        placeholder="Please Select Props"
+                        value={selectedPropOptions}
+                        options={propChoices}
+                        onChange={handlePropChange}
+                    />
+
+                    {selectedPropOptions && <div style={{ marginTop: 20, lineHeight: '25px' }}>
+                    </div>}
                 </div>
             </fieldset>
+
             <fieldset>
-                <div className="create-group">
-                    <label htmlFor="furnitures">Choose Furniture:</label>
-                    <select value={rentalPackage.furnitureId}
-                        onChange={
-                            (event) => {
-                                const copy = { ...rentalPackage }
-                                copy.furnitureId = parseInt(event.target.value)
-                                updatePackage(copy)
-                            }
-                        }>
-                        <option value="0" >Please Select Furniture</option>
-                        {furnitures.map((furniture) => {
-                            return <option key={furniture.id} value={furniture.id}> {furniture.name} {furniture.image} </option>
-                        })}
-                    </select>
+                <div>
+                    <Select
+                        isMulti
+                        placeholder="Please Select Furniture"
+                        value={selectedFurnitureOptions}
+                        options={furnitureChoices}
+                        onChange={handleFurnitureChange}
+                    />
+
+                    {selectedFurnitureOptions && <div style={{ marginTop: 20, lineHeight: '25px' }}>
+                    </div>}
                 </div>
             </fieldset>
+
             <fieldset>
-                <div className="create-group">
-                    <label htmlFor="lights">Choose Lights:</label>
-                    <select value={rentalPackage.lightId}
-                        onChange={
-                            (event) => {
-                                const copy = { ...rentalPackage }
-                                copy.lightId = parseInt(event.target.value)
-                                updatePackage(copy)
-                            }
-                        }>
-                        <option value="0">Please Select Lights</option>
-                        {lights.map((light) => {
-                            return <option key={light.id} value={light.id}> {light.name} {light.image} </option>
-                        })}
-                    </select>
+                <div>
+                    <Select
+                        isMulti
+                        placeholder="Please Select Lights"
+                        value={selectedLightOptions}
+                        options={lightChoices}
+                        onChange={handleLightChange}
+                    />
+
+                    {selectedLightOptions && <div style={{ marginTop: 20, lineHeight: '25px' }}>
+                    </div>}
                 </div>
             </fieldset>
+
             <fieldset>
                 <div className="form-group">
                     <label htmlFor="book__date">Book Date:</label>
@@ -264,8 +536,5 @@ export const EditPage = () => {
             </button>
         </form >
     )
-
-
-
 }
 

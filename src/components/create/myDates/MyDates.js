@@ -2,16 +2,20 @@ import { useEffect, useState } from "react"
 
 
 
+
+
 export const MyDatesPage = () => {
+
     const localTextureUser = localStorage.getItem("texture_user")
     const textureUserObject = JSON.parse(localTextureUser)
     const [rentalPackages, setPackages] = useState([])
-    const [filteredPackages, setFiltered] = useState([])
+    const [myFilteredPackages, setMyFiltered] = useState([])
     const [users, setUsers] = useState([])
     const [myUser, setMyUser] = useState({})
+
     useEffect(
         () => {
-            fetch(`http://localhost:8080/rentalPackages/?_expand=bookingDate&_expand=light&_expand=user`)
+            fetch(`http://localhost:8080/rentalPackages/?_expand=bookingDate&_expand=user`)
                 .then(response => response.json())
                 .then((packagesArray) => {
                     setPackages(packagesArray)
@@ -22,19 +26,21 @@ export const MyDatesPage = () => {
 
     useEffect(
         () => {
-            fetch(`http://localhost:8080/users`)
-                .then(response => response.json())
-                .then((UsersArray) => {
-                    setUsers(UsersArray)
-                })
+            if (users.length) {
+                fetch(`http://localhost:8080/users`)
+                    .then(response => response.json())
+                    .then((UsersArray) => {
+                        setUsers(UsersArray)
+                    })
+            }
         },
-        []
+        [users]
     )
 
     useEffect(
         () => {
             const myPackages = rentalPackages.filter(rentalPackage => rentalPackage?.user?.id === textureUserObject?.id)
-            setFiltered(myPackages)
+            setMyFiltered(myPackages)
         },
         [rentalPackages]
     )
@@ -46,8 +52,6 @@ export const MyDatesPage = () => {
         },
         [users]
     )
-
-
 
     let timeFormat = (time) => {
         if (parseFloat(time, 2) > 12) {
@@ -62,22 +66,9 @@ export const MyDatesPage = () => {
 
     let timeFunc = (time) => {
         if (parseFloat(time, 2) > 12) {
-            return "PM"
+            return " PM"
         }
-        else return "AM"
-    }
-
-    let hourlyCost = (hours) => {
-        let costOfHours = parseInt(hours) * 75
-        return costOfHours
-    }
-
-
-
-    let totalCost = (lightCost, hourCost) => {
-        let totalPrice = lightCost + hourCost
-        return totalPrice
-
+        else return " AM"
     }
 
 
@@ -91,9 +82,9 @@ export const MyDatesPage = () => {
         <article>
             <div className="confirmation_dateBooked">
 
-                {filteredPackages?.reverse()?.map((rentalPackage) => {
+                {myFilteredPackages?.reverse()?.map((rentalPackage) => {
 
-                    let price = totalCost(rentalPackage?.light?.lightCost, hourlyCost(rentalPackage?.bookingDate?.totalHours))
+                    let total = rentalPackage?.totalCost
                     let from = timeFormat(rentalPackage?.bookingDate?.startTime)
                     let until = timeFormat(rentalPackage?.bookingDate?.endTime)
                     let dateBooked = new Date(rentalPackage?.bookingDate?.date).toLocaleDateString('en-US', { timeZone: 'UTC' })
@@ -106,7 +97,7 @@ export const MyDatesPage = () => {
                         <div value={rentalPackage.id} >
                             <div value={rentalPackage?.id}>
                                 {dateBooked} from {from}{startTime} until {until}{endTime}</div>
-                            <div value={rentalPackage?.id}>Price: ${price}</div>
+                            <div value={rentalPackage?.id}>Price: ${total}</div>
                         </div>
                     </section>
                 })}

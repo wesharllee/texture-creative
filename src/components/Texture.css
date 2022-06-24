@@ -1,25 +1,112 @@
 /* Import the google web fonts you want to use */
 @import url("https://fonts.googleapis.com/css?family=Comfortaa|Patua+One");
+@import url('https://fonts.googleapis.com/css2?family=Babylonica&family=Comic+Neue:wght@700&family=Stoke&display=swap');
 
 /*Typography
 --------------------------------------------------------------*/
-body,
-button,
+* {
+  border-radius: 1px;
+  /* border: 1px dashed goldenrod; */
+}
+
+html {
+  border-radius: 1px;
+  border: 1px dashed pink;
+}
+
+body {
+  border-radius: 1px;
+  border: 1px dashed blue;
+  color: #404040;
+  /* font-family: 'Stoke', serif; */
+  ;
+  /* display: flex;
+  align-items: center;
+  justify-content: center; */
+
+  color: white;
+  font-size: 16px;
+  line-height: 1.5;
+  background-color: rgb(22, 22, 22);
+  /* background-image: url(https://static.vecteezy.com/system/resources/previews/004/681/592/large_2x/dirt-overlay-screen-effect-use-for-grunge-background-and-vintage-style-abstract-dust-particle-and-dust-grain-texture-on-black-background-free-photo.jpg);
+  background-repeat: no-repeat;
+  background-size: cover; */
+  /* background-blend-mode: difference; */
+ 
+}
+
+
+button {
+  /* border-radius: 1px;
+  border: 1px dashed red; */
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #404040;
+  font-family: Verdana, Geneva, Tahoma, sans-serif;
+  ;
+  color: white;
+  font-size: 14px;
+  line-height: 1.75;
+  background-image: linear-gradient(to right, goldenrod, rgb(214, 182, 100));
+  padding: .25rem;
+  /* border-radius: 1rem; */
+    /* border: dashed turquoise; */
+    /* box-shadow: 0.15rem 0.15rem 0.25rem rgb(143, 143, 143); */
+}
+
+#root {
+  
+  border: 1px dashed white;
+  
+  
+  
+  
+}
+
 input,
 select,
 textarea {
+  border-radius: 1px;
+  border: 1px dashed yellow;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
   color: #404040;
-  font-family: "Comfortaa", Arial, sans-serif;
+  font-family: 'Stoke', serif;
+  ;
+  /* color: goldenrod; */
   font-size: 14px;
   line-height: 1.5;
 }
 
-body {
-    padding: 0 3rem;
+
+
+h1 {
+  text-align: center;
+  font-family: 'Stoke', serif;
+  letter-spacing: 2px;
+  color: goldenrod;
+  border-radius: 1px;
+  /* border: 1px dashed red; */
 }
 
-h1, h2, h3, h4, h5, h6 {
-  font-family: "Patua One", serif;
+h2 {
+  text-align: center;
+  font-family: 'Stoke', serif;
+  letter-spacing: 2px;
+  border-radius: 1px;
+  /* border: 1px dashed red; */
+  padding-bottom: 2rem;
+}
+h3,
+h4,
+h5,
+h6 {
+  text-align: center;
+  font-family: 'Stoke', serif;
   letter-spacing: 2px;
 }
 
@@ -28,6 +115,27 @@ p {
 }
 
 .title--main {
+  color: red;
   margin-block-end: 0;
 }
 
+.mainPhoto {
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+  justify-content: center;
+  align-items: center;
+  border-radius: 1px;
+  border: 1px dashed green;
+  /* padding: 3rem; */
+
+}
+
+
+
+.getCentered {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+}

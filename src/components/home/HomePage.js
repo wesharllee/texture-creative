@@ -12,14 +12,17 @@ export const HomePage = () => {
         {textureUserObject.staff === true ?
             <>
                 {
+                    <div className="getCentered">
                     <button onClick={() => navigate("/employeelounge")} >Employee Lounge</button>
+                    </div>
                 }
             </>
             :
             <>
                 {
+                    <div className="getCentered">
                     <button onClick={() => navigate("/create")} >Create Your Experience</button>
-
+                    </div>
                 }
 
             </>

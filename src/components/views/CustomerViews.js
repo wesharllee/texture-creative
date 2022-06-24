@@ -5,7 +5,7 @@ import { CreatePage } from "../create/Create"
 import { EditPage } from "../create/Edit"
 import { MyDatesPage } from "../create/myDates/MyDates"
 import { HomePage } from "../home/HomePage"
-import { LightsPage } from "../lights/Lights"
+
 
 
 export const CustomerViews = () => {
@@ -14,7 +14,7 @@ export const CustomerViews = () => {
             <Route path="/" element={
                 <>
                     <h1>Texture Creative</h1>
-                    <div>insert logo here</div>
+                    {/* <div>insert logo here</div> */}
 
                     <Outlet />
                 </>
@@ -26,7 +26,7 @@ export const CustomerViews = () => {
                 <Route path="confirmation/:id" element={<ConfirmationPage />} />
                 <Route path="edit/:id" element={<EditPage />} />
                 <Route path="mydates" element={<MyDatesPage />} />
-                <Route path="lights" element={<LightsPage />} />
+                
 
 
 
