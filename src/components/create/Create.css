@@ -53,28 +53,3 @@
 
 }
 
-/* .pic {
-    position: relative;
-    visibility: hidden;
-    opacity: 0;
-    transition:opacity .5s;
-    z-index: 0;
-    top: -60px;
-    left: 0px;
-}
-
-.text-tag  {
-    font-family: Nexa;
-    font-weight:bolder;
-    display: flex;
-    z-index: 2;
-    font-size: 1.8rem;
-    line-height: 2rem;
-    color: var(--font_color);
-}
-
-.text-tag:hover .pic {
-    opacity: 1;
-    visibility:visible;
-    transition:opacity .8s;
-} */
