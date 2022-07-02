@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react"
 import { useNavigate, useParams } from "react-router-dom"
+import "./Checkout.css"
 
 
 
@@ -7,13 +8,12 @@ import { useNavigate, useParams } from "react-router-dom"
 
 export const CheckOutPage = () => {
     const { id } = useParams()
+    const navigate = useNavigate()
 
     const [lights, setLights] = useState({})
-    // const [lightPackage, setLightPackage] = useState({})
     const [fullInfoRentalPackage, setFullInfoRentalPackage] = useState({})
     const [rentalPackage, setPackage] = useState({})
-    // const [rentalBookingPackage, setRentalBooking] = useState({})
-    const navigate = useNavigate()
+    const [isShown, setIsShown] = useState(false)
 
     const sendRequest = (rentalPackage) => {
         return fetch(`http://localhost:8080/rentalPackages/${id}`, {
@@ -26,16 +26,6 @@ export const CheckOutPage = () => {
 
     }
 
-    // useEffect(
-    //     () => {
-    //         fetch(`http://localhost:8080/bookingDates/${id}`)
-    //             .then(response => response.json())
-    //             .then((bookingPackageObj) => {
-    //                 setRentalBooking(bookingPackageObj)
-    //             })
-    //     },
-    //     [id]
-    // )
 
     useEffect(
         () => {
@@ -59,28 +49,6 @@ export const CheckOutPage = () => {
         [id]
     )
 
-    // useEffect(
-    //     () => {
-    //         fetch(`http://localhost:8080/lightpackages/?rentalPackageId=${id}&_expand=rentalPackage&_expand=bookingdate`)
-    //             .then(response => response.json())
-    //             .then((lightPackageObj) => {
-    //                 setLightPackage(lightPackageObj)
-    //             })
-
-    //     },
-    //     [id]
-    // )
-
-    // useEffect(
-    //     () => {
-    //         fetch(`http://localhost:8080/rentalPackages/${id}?_embed=backdropPackages&_embed=propPackages&_embed=furniturePackages&_embed=lightPackages`)
-    //             .then(response => response.json())
-    //             .then((rentalPackage) => {
-    //                 setFullInfoRentalPackage(rentalPackage)
-    //             })
-    //     },
-    //     [id]
-    // )
 
     useEffect(
         () => {
@@ -125,17 +93,17 @@ export const CheckOutPage = () => {
     }
 
     const DeleteButton = () => {
-        return <button
+        return <button className="buttonz"
             onClick={() => {
                 fetch(`http://localhost:8080/rentalPackages/${id}`, {
                     method: "DELETE"
                 })
                     .then(() => navigate(`/create`))
-            }}>Delete
+            }}>delete
         </button>
     }
 
-    
+
     const lightPriceFunc = (lightPackages) => {
         let lightArray = []
         for (const lightPackage of lightPackages) {
@@ -143,72 +111,86 @@ export const CheckOutPage = () => {
             lightArray.push(newLightObj)
         }
         let price = 0
-        for(const lightObj of lightArray) {
+        for (const lightObj of lightArray) {
             price += lightObj.lightCost
         }
         return price
     }
 
-    
+
 
     let hourPrice = hourlyCost(rentalPackage?.bookingDate?.totalHours)
-    let lightPrice = fullInfoRentalPackage.lightPackages ? lightPriceFunc(fullInfoRentalPackage?.lightPackages) : 0 
+    let lightPrice = fullInfoRentalPackage.lightPackages ? lightPriceFunc(fullInfoRentalPackage?.lightPackages) : 0
     let total = totalCost(lightPrice, hourPrice)
     let from = timeFormat(rentalPackage?.bookingDate?.startTime)
     let until = timeFormat(rentalPackage?.bookingDate?.endTime)
     let dateBooked = new Date(rentalPackage?.bookingDate?.date).toLocaleDateString('en-US', { timeZone: 'UTC' })
-    let name = rentalPackage?.user?.name
+    let first = rentalPackage?.user?.firstName
+    let last = rentalPackage?.user?.lastName
     let startTime = timeFunc(rentalPackage?.bookingDate?.startTime)
     let endTime = timeFunc(rentalPackage?.bookingDate?.endTime)
 
     return <>
-        <h2>This will be checkout</h2>
+        {/* <h2>Checkout</h2> */}
+        <section className="CheckoutPage">
+            <article>
+                <div className="checkout_dateBooked">
 
-        <article>
-            <div className="checkout_dateBooked">
+                    <section className="RequestInfo" key={rentalPackage.id}>
+                        <h3>Hey {first} {last}! <br/> <br/>Here are your booking details</h3>
+                        <div className="requestify">
+                            <div className="requestify1" value={rentalPackage.id}>Date: {dateBooked} <br /> Time: {from}{startTime} - {until}{endTime}  </div>
+                            <div className="requestify2" value={rentalPackage.id}>Venue Rental: ${hourPrice} <br />Light Rental: ${lightPrice} </div>
+                        </div>
+                        <div className="requestTotal" value={rentalPackage.id}>Total: ${total} </div>
+                    </section>
+                    <div className="liability_form">
+                        <div className="LiabilityBox">
 
-                <section key={rentalPackage.id}>
-                    <div value={rentalPackage.id}>
-                        {name} has requested to book Texture Creative Studio for {dateBooked} from {from}{startTime} until {until}{endTime}</div>
-                    <div value={rentalPackage.id}>Venue Rental: ${hourPrice} </div>
-                    <div value={rentalPackage.id}>Light Rental: ${lightPrice} </div>
-                    <div value={rentalPackage.id}>Total: ${total} </div>
-                </section>
+                            <h6>I understand that I am financially responsible <br />
+                                for any damage done at Texture Creative Studio <br />
+                                including but not limited to any equipment
+                                lost, <br />stolen or damaged.<br /><br />
+                                By clicking "I Agree", I accept full liability.
+                            </h6>
+                            <div className="LiableButtonContainer">
+                                <button className="LiableButton"
+                                    onClick={
+                                        () => {
+                                            const copy = { ...rentalPackage }
+                                            copy.eSign = true
+                                            copy.totalCost = total
+                                            setPackage(copy)
+                                        }
+                                    }>I Agree
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
 
 
+            </article>
+            <article className="CheckoutButtonContainer">
 
-
-            </div>
-            <div className="liability_form">
-                I Won't Break Your Shiz
-
-                <button onClick={
-                    () => {
-                        const copy = { ...rentalPackage }
-                        copy.eSign = true
-                        copy.totalCost = total
-                        setPackage(copy)
-
+                <button className="buttonz" onClick={(evt) => {
+                    if (rentalPackage.totalCost > 0) {
+                        sendRequest(rentalPackage)
+                            .then(() => navigate(`/confirmation/${id}`))
                     }
-                }>I'm Liable</button>
+                    else {
+                        window.alert("Please Agree to Terms of Service")
+                    }
+                }}>confirm</button>
 
-            </div>
+                <button className="buttonz" onClick={(evt) => {
+                    navigate(`/edit/${id}`)
+                }}>edit</button>
 
+                {DeleteButton()}
 
-        </article>
-
-        <button onClick={(evt) => {
-            navigate(`/edit/${id}`)
-        }}>Edit</button>
-
-        <button onClick={(evt) => {
-            sendRequest(rentalPackage)
-                .then(() => navigate(`/confirmation/${id}`))
-        }}>Send Request</button>
-
-        {DeleteButton()}
-
-
+            </article>
+        </section>
 
     </>
 

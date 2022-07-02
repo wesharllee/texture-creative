@@ -1,0 +1,124 @@
+.CheckoutPage{
+    padding-bottom: 5rem;
+}
+.CheckoutButtonContainer {
+    width: 100%;
+    display: flex;
+    justify-content: end;
+    padding: 1rem;
+    margin: .1rem;
+    /* padding-right: 3rem; */
+}
+
+.LiableButtonContainer {
+    display: flex;
+    justify-content: center;
+ 
+}
+
+.requestify {
+    display: flex;
+    justify-content: space-between;
+    padding-bottom: 2rem;
+    padding-top: 2rem;
+}
+
+.requestify1 {
+    padding-right: 1rem;
+}
+
+.requestify2 {
+    padding-left: 1rem;
+}
+.RequestInfo {
+    margin-top: 1rem;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    border-radius: 1rem;
+    border: 1px dashed goldenrod;
+    padding: 4rem;
+    padding-left: 6rem;
+    padding-right: 6rem;
+    width: 50%;
+    font-size: x-large;
+}
+
+.requestTotal {
+    font-weight: bold;
+}
+
+
+.liability_form {
+    display: flex;
+    flex-direction: column;
+    /* flex: 3; */
+    justify-content: center;
+    padding-top: 2rem;
+    align-items: center;
+    padding-bottom: 1rem;
+    
+}
+
+.LiabilityBox {
+    display: flex;
+    flex-direction: column;
+    /* justify-content: end; */
+    border-radius: 1rem;
+    border: 1px solid whitesmoke;
+    padding: 2rem;
+    /* height: 11rem;
+    width: 25rem; */
+    margin: 1.25rem;
+    font-size: larger;
+    
+    
+}
+
+.checkout_dateBooked {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    /* justify-content: center; */
+    border-radius: 1rem;
+    border: 1px solid whitesmoke;
+    padding-top: 2rem;
+    /* height: 11rem;
+    width: 25rem; */
+    /* margin: 1.25rem; */
+    font-size: larger;
+    
+    
+}
+
+.LiableButton {
+    background-image: linear-gradient(to right, goldenrod, rgb(214, 182, 100));
+    cursor: pointer;
+    position: relative;
+    overflow: hidden;
+    transition: all 2s;
+}
+
+  
+  .LiableButton:before {
+    width: 100%;
+    height: 100%;
+    content: '';
+    margin: auto;
+    position: absolute;
+    top: -100%;
+    left: -100%;
+    background: whitesmoke;
+    transition: all 2s;
+    z-index: -1;
+  }
+  
+  .LiableButton:hover {
+    color: goldenrod;
+    background: linear-gradient(rgb(22, 22, 22), rgb(40, 34, 34));
+  }
+  
+  .LiableButton:hover:before {
+    top: 0;
+    left: 0;
+  }

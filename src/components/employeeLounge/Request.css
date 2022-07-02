@@ -1,0 +1,34 @@
+.RequestPage {
+    display: flex;
+    align-items: center;
+    flex-direction: column;
+    padding-bottom: 40rem;
+    
+}
+
+.getRightish {
+    display: flex;
+    align-items: center;
+    /* justify-content: right; */
+    /* padding-left: 10rem; */
+    padding-top: 1rem;
+  }
+
+  .Request {
+    display: flex;
+    flex-direction: column;
+    justify-content: end;
+    border-radius: 1rem;
+    border: 1px solid whitesmoke;
+    padding: 2rem;
+    /* height: 11rem;
+    width: 25rem; */
+    margin: 1.25rem;
+    font-size: larger;
+    list-style-type: none;
+    padding-left: 4rem;
+    padding-right: 4rem;
+    padding-top: 2rem;
+    padding-bottom: 2rem;
+
+  }

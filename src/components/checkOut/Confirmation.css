@@ -1,0 +1,60 @@
+.confirmationPage {
+    
+    display: flex; 
+    flex-direction: column;
+    /* height: 80%; */
+    padding-bottom: 30rem;
+}
+
+.ConfirmationButtonContainer {
+    display: flex;
+    justify-content: end;
+    padding: 1rem;
+    margin: .1rem;
+
+}
+
+.confirmation {
+    display: flex;
+    /* flex: 3; */
+    justify-content: center;
+}
+
+.NameValue {
+    text-decoration: underline;
+    padding-bottom: .5rem;
+   
+}
+
+.MarginBuffer {
+    margin-left: 10rem;
+    margin-right: 10rem;
+}
+
+.ThanksContainer {
+    border-radius: 1rem;
+    border: 1px dashed goldenrod;
+    padding: .5rem;
+    margin-top:  4rem;
+    margin-bottom: 4rem;
+    margin-left: 10rem;
+    margin-right: 10rem;
+    text-align: center;
+}
+.RequestsBox {
+    display: flex;
+    flex-direction: column;
+    /* justify-content: end; */
+    border-radius: 1rem;
+    border: 1px solid whitesmoke;
+    padding-top: 4rem;
+    padding-bottom: 2rem;
+    /* padding-left: 10rem;
+    padding-right: 10rem; */
+    /* height: 11rem;
+    width: 25rem; */
+    margin: 1.25rem;
+    font-size: larger;
+    
+
+}

@@ -1,4 +1,5 @@
 import { useEffect, useState } from "react"
+import { useNavigate } from "react-router-dom"
 
 
 
@@ -8,6 +9,8 @@ export const MyDatesPage = () => {
 
     const localTextureUser = localStorage.getItem("texture_user")
     const textureUserObject = JSON.parse(localTextureUser)
+    const navigate = useNavigate()
+
     const [rentalPackages, setPackages] = useState([])
     const [myFilteredPackages, setMyFiltered] = useState([])
     const [users, setUsers] = useState([])
@@ -26,13 +29,19 @@ export const MyDatesPage = () => {
 
     useEffect(
         () => {
-            if (users.length) {
-                fetch(`http://localhost:8080/users`)
-                    .then(response => response.json())
-                    .then((UsersArray) => {
-                        setUsers(UsersArray)
-                    })
-            }
+            fetch(`http://localhost:8080/users`)
+                .then(response => response.json())
+                .then((UsersArray) => {
+                    setUsers(UsersArray)
+                })
+        },
+        []
+    )
+
+    useEffect(
+        () => {
+            const user = users.find(user => user?.id === textureUserObject?.id)
+            setMyUser(user)
         },
         [users]
     )
@@ -45,13 +54,6 @@ export const MyDatesPage = () => {
         [rentalPackages]
     )
 
-    useEffect(
-        () => {
-            const user = users.find(user => user?.id === textureUserObject?.id)
-            setMyUser(user)
-        },
-        [users]
-    )
 
     let timeFormat = (time) => {
         if (parseFloat(time, 2) > 12) {
@@ -71,43 +73,50 @@ export const MyDatesPage = () => {
         else return " AM"
     }
 
+    let name = myUser?.firstName
+    console.log(users)
 
     return <>
-        <h2>My Booking Requests</h2>
+        <h2>Upcoming Dates</h2>
+
+        <section className="DatesPage">
+            <article className="thanksTitleContainer">
+                <div className="thanksTitle" key={myUser?.id}>Thanks {name}! Here are your current requests:</div>
+            </article>
+
+            <article>
+                <div className="confirmation_dateBooked">
+
+                    {myFilteredPackages?.reverse()?.map((rentalPackage) => {
+
+                        let total = rentalPackage?.totalCost
+                        let from = timeFormat(rentalPackage?.bookingDate?.startTime)
+                        let until = timeFormat(rentalPackage?.bookingDate?.endTime)
+                        let dateBooked = new Date(rentalPackage?.bookingDate?.date).toLocaleDateString('en-US', { timeZone: 'UTC' })
+                        let startTime = timeFunc(rentalPackage?.bookingDate?.startTime)
+                        let endTime = timeFunc(rentalPackage?.bookingDate?.endTime)
 
 
 
-        <section key={myUser?.id}>Hello {myUser?.name}! Here are your booking requests:</section>
+                        return <section className="requestsBox" key={rentalPackage?.id}>
+                            <div value={rentalPackage.id} >
+                                <div value={rentalPackage?.id}>
+                                    {dateBooked} from {from}{startTime} until {until}{endTime}</div>
+                                <div value={rentalPackage?.id}>Price: ${total}</div>
+                            </div>
+                        </section>
+                    })}
+                </div>
 
-        <article>
-            <div className="confirmation_dateBooked">
-
-                {myFilteredPackages?.reverse()?.map((rentalPackage) => {
-
-                    let total = rentalPackage?.totalCost
-                    let from = timeFormat(rentalPackage?.bookingDate?.startTime)
-                    let until = timeFormat(rentalPackage?.bookingDate?.endTime)
-                    let dateBooked = new Date(rentalPackage?.bookingDate?.date).toLocaleDateString('en-US', { timeZone: 'UTC' })
-                    let startTime = timeFunc(rentalPackage?.bookingDate?.startTime)
-                    let endTime = timeFunc(rentalPackage?.bookingDate?.endTime)
-
-
-
-                    return <section key={rentalPackage?.id}>
-                        <div value={rentalPackage.id} >
-                            <div value={rentalPackage?.id}>
-                                {dateBooked} from {from}{startTime} until {until}{endTime}</div>
-                            <div value={rentalPackage?.id}>Price: ${total}</div>
-                        </div>
-                    </section>
-                })}
-            </div>
+                <div className="ConfirmationButtonContainer">
+                    <button className="buttonz" onClick={() => navigate("/home")} >home</button>
+                    {/* <button className="buttonz" onClick={() => navigate("/mydates")} >my dates</button> */}
+                </div>
 
 
 
-
-        </article>
-
+            </article>
+        </section>
 
     </>
 

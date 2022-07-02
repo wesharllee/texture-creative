@@ -1,0 +1,38 @@
+.HomePage {
+    display: flex;
+    flex: 1;
+    flex-direction: column;
+    color: goldenrod;
+    /* height: ; */
+    padding-bottom: 40em;
+}
+
+.homePhoto {
+    flex: 1;
+    /* max-height: 30rem; */
+    width:38%;
+    padding: 8rem
+}
+
+.homeContainer {
+    display: flex;
+    flex-direction: row;
+    
+}
+
+.paragraph {
+    max-width: 50rem;
+    font-size: larger;
+    line-height: 2;
+}
+
+.bio {
+    display: flex;
+    width: 50%;
+    flex-direction: column;
+    /* margin: 2rem; */
+    padding: 4rem;
+    justify-content: center;
+    align-items: center;
+}
+

@@ -3,29 +3,50 @@
     justify-content: end;
     padding: 1rem;
     margin: .1rem;
-    
-    
+
+
 }
 
 .requestsBox {
     display: flex;
     flex-direction: column;
-    justify-content: center;
+    justify-content: end;
     border-radius: 1rem;
     border: 1px solid whitesmoke;
-    padding: 1rem;
+    padding: 2rem;
     /* height: 11rem;
     width: 25rem; */
     margin: 1.25rem;
     font-size: larger;
+    list-style-type: none;
 
+}
+
+.personal {
+    color: rgb(232, 231, 225);
+}
+
+.DatesPage {
+    padding-bottom: 35rem;
+}
+.thanksTitleContainer {
+    display: flex;
+    justify-content: center;
+}
+
+.thanksTitle {
+    display: flex;
+    justify-content: left;
+    width: 85%;
+    font-size: x-large;
+    /* padding-left: 3rem; */
+    padding-top: 5rem;
 }
 
 .confirmation_dateBooked {
     display: grid;
     justify-content: center;
-    /* grid-template-columns: 1fr, 1fr, 1fr;
-    grid-template-rows: 2fr, 2fr; */
+
     grid-template-areas:
         "option option option"
         "option option option"
@@ -33,9 +54,9 @@
         "option option option";
     grid-row-gap: 1fr;
     padding: 3rem;
-    padding-bottom: 100rem;
-    background-image: linear-gradient(rgb(22, 22, 22), rgb(40, 34, 34));
-    
+    /* padding-bottom: 100rem; */
+    /* background-image: linear-gradient(rgb(22, 22, 22), rgb(40, 34, 34)); */
+
 }
 
 /* https://s.studiobinder.com/wp-content/uploads/2020/08/What-is-Film-Grain-Film-Grain-Example.jpg?resolution=2560,1 */

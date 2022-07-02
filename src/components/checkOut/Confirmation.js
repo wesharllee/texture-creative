@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react"
 import { useNavigate, useParams } from "react-router-dom"
+import "./Confirmation.css"
 
 
 export const ConfirmationPage = () => {
@@ -43,37 +44,38 @@ export const ConfirmationPage = () => {
     let from = timeFormat(rentalPackage?.bookingDate?.startTime)
     let until = timeFormat(rentalPackage?.bookingDate?.endTime)
     let dateBooked = new Date(rentalPackage?.bookingDate?.date).toLocaleDateString('en-US', { timeZone: 'UTC' })
-    let name = rentalPackage?.user?.name
+    let name = rentalPackage?.user?.firstName
     let startTime = timeFunc(rentalPackage?.bookingDate?.startTime)
     let endTime = timeFunc(rentalPackage?.bookingDate?.endTime)
 
 
 
     return <>
-        <h2>This will be confirmation</h2>
+        <h2>Your Request Has Been Sent!</h2>
 
-        <article>
-            <div className="confirmation_dateBooked">
+        <article className="confirmationPage">
+            <div className="confirmation">
 
-                <section key={rentalPackage.id}>
-                    <div value={rentalPackage.id}>
-                        {name} has requested to book Texture Creative Studio for {dateBooked} from {from}{startTime} until {until}{endTime}</div>
-                    <div value={rentalPackage.id}>Price: ${total}</div>
+                <section className="RequestsBox" key={rentalPackage.id}>
+                    <div className="MarginBuffer">
+                        <div className="NameValue" value={rentalPackage.id}>
+                            Hey {name}! Thanks for your request.</div>
+                        <div value={rentalPackage.id}>Date: {dateBooked}</div>
+                        <div value={rentalPackage.id}>Time: {from}{startTime} - {until}{endTime}</div>
+                        <div value={rentalPackage.id}>Total: ${total}</div>
+                    </div>
+                    <div className="ThanksContainer">
+                        <div>We Will Confirm Within 24 Hours</div>
+                    </div>
+                    <div className="ConfirmationButtonContainer">
+                        <button className="buttonz" onClick={() => navigate("/home")} >home</button>
+                        <button className="buttonz" onClick={() => navigate("/mydates")} >my dates</button>
+                    </div>
                 </section>
 
             </div>
-            <div>We Will Confirm Within 24 Hours</div>
-            <div>Thank You</div>
-
-
-            <button onClick={() => navigate("/home")} >Home</button>
-            <button onClick={() => navigate("/mydates")} >My Dates</button>
-
-
-
-
-
         </article>
+
 
 
     </>

@@ -1,0 +1,80 @@
+.MultiSelect {
+    /* display: flex;
+    justify-content: left; */
+    color: black;
+    width: 94%;
+}
+
+.CreateOptions {
+    display: flex;
+    flex: 1;
+    flex-wrap: wrap;
+    flex-direction: row;
+
+}
+
+.CreatePage {
+    padding-bottom: 20rem;
+}
+
+.CreateSelections {
+    flex: 1;
+}
+
+.CreateImages {
+    flex: 1;
+}
+
+.pic {
+    flex: 1;
+    object-fit: cover;
+    width: 250px;
+    height: 250px;
+    object-fit: cover;
+    /* width: 225px; */
+    /* padding: 1rem; */
+    border-radius: .5rem;
+    margin: 1rem;
+    box-shadow: 0.15rem 0.15rem 0.25rem rgb(87, 84, 71);
+}
+
+.imageContainer {
+    display: grid;
+    justify-content: center;
+
+    grid-template-areas:
+        "option option option"
+        "option option option"
+        "option option option"
+        "option option option";
+    grid-row-gap: 1fr;
+    /* padding: 3rem; */
+    /* margin: 1rem; */
+
+}
+
+/* .pic {
+    position: relative;
+    visibility: hidden;
+    opacity: 0;
+    transition:opacity .5s;
+    z-index: 0;
+    top: -60px;
+    left: 0px;
+}
+
+.text-tag  {
+    font-family: Nexa;
+    font-weight:bolder;
+    display: flex;
+    z-index: 2;
+    font-size: 1.8rem;
+    line-height: 2rem;
+    color: var(--font_color);
+}
+
+.text-tag:hover .pic {
+    opacity: 1;
+    visibility:visible;
+    transition:opacity .8s;
+} */

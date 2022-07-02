@@ -36,7 +36,7 @@ export const Login = () => {
                     <h2>Please sign in</h2>
                     <fieldset>
                         <label htmlFor="inputEmail"> Email address </label>
-                        <input type="email"
+                        <input  type="email"
                             value={email}
                             onChange={evt => set(evt.target.value)}
                             className="form-control"
@@ -44,14 +44,14 @@ export const Login = () => {
                             required autoFocus />
                     </fieldset>
                     <fieldset>
-                        <button type="submit">
-                            Sign in
+                        <button className="buttonz" type="submit">
+                            sign in
                         </button>
                     </fieldset>
                 </form>
             </section>
             <section className="link--register">
-                <Link to="/register">Not a member yet?</Link>
+                <Link to="/register">not a member yet?</Link>
             </section>
         </main>
     )

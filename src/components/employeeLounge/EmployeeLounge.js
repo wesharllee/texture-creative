@@ -4,7 +4,7 @@ import "./EmployeeLounge.css"
 
 
 export const EmployeeLoungePage = () => {
-    const { id } = useParams
+    // const { id } = useParams
 
     const localTextureUser = localStorage.getItem("texture_user")
     const textureUserObject = JSON.parse(localTextureUser)
@@ -14,27 +14,7 @@ export const EmployeeLoungePage = () => {
     const [rentalPackages, setPackages] = useState([])
     const [users, setUsers] = useState([])
     const [myUser, setMyUser] = useState({})
-
-    useEffect(
-        () => {
-            fetch(`http://localhost:8080/users`)
-                .then(response => response.json())
-                .then((UsersArray) => {
-                    setUsers(UsersArray)
-                })
-        },
-        []
-    )
-    console.log(rentalPackages)
-
-
-    useEffect(
-        () => {
-            const user = textureUserObject?.id ? users.find(user => user?.id === textureUserObject?.id) : 0
-            setMyUser(user)
-        },
-        [users]
-    )
+   
 
     useEffect(
         () => {
@@ -46,6 +26,27 @@ export const EmployeeLoungePage = () => {
         },
         []
     )
+
+    useEffect(
+        () => {
+            fetch(`http://localhost:8080/users`)
+                .then(response => response.json())
+                .then((UsersArray) => {
+                    setUsers(UsersArray)
+                })
+        },
+        []
+    )
+
+
+    useEffect(
+        () => {
+            const user = textureUserObject?.id ? users.find(user => user?.id === textureUserObject?.id) : 0
+            setMyUser(user)
+        },
+        [users]
+    )
+
 
 
     let timeFormat = (time) => {
@@ -75,25 +76,20 @@ export const EmployeeLoungePage = () => {
         }
     }
 
+    
 
-    const DeleteButton = () => {
-        return <button
-            onClick={() => {
-                fetch(`http://localhost:8080/rentalPackages/${id}`, {
-                    method: "DELETE"
-                })
-                    .then(() => navigate(`/employeelounge`))
-            }}>Delete
-        </button>
-    }
+    // let firstName = textureUserObject?.id ? getFirstName(myUser?.name) : 0
 
-    // let fullName = myUser ? myUser?.name : 0
-    // const [first, last] = fullName.split(" ")
-    // console.log(first)
-    // console.log(last)
+    // let currentUserArray = getFirstName(myUser)
+
+    // // let firstName = currentUserArray.firstName
+    // console.log(currentUserArray)
+
+
+
 
     return <>
-        <h2>Hey {myUser?.name}, <br/> New Bookings</h2>
+        <h2 className="personal" >Hey {myUser?.firstName},    <br />These People Want Stuff</h2>
         <h3></h3>
 
         <article>
@@ -104,7 +100,8 @@ export const EmployeeLoungePage = () => {
                     let from = timeFormat(rentalPackage?.bookingDate?.startTime)
                     let until = timeFormat(rentalPackage?.bookingDate?.endTime)
                     let dateBooked = new Date(rentalPackage?.bookingDate?.date).toLocaleDateString('en-US', { timeZone: 'UTC' })
-                    let name = rentalPackage.user.name
+                    let first = rentalPackage.user.firstName
+                    let last = rentalPackage.user.lastName
                     let email = rentalPackage.user.email
                     let phone = rentalPackage.user.phoneNumber
                     let signed = hasSigned(rentalPackage?.eSign)
@@ -114,16 +111,26 @@ export const EmployeeLoungePage = () => {
 
 
                     return <section className="requestsBox" key={rentalPackage.id}>
-                        <div value={rentalPackage.id}>
-                            {name} has requested to book Texture Creative Studio</div>
-                        <div value={rentalPackage.id}>Date: {dateBooked} from {from}{startTime} until {until}{endTime}</div>
-                        <div value={rentalPackage.id}>Price: ${price}</div>
-                        <div value={rentalPackage.id}>Phone Number: {phone}</div>
-                        <div value={rentalPackage.id}>Email: {email}</div>
-                        <div value={rentalPackage.id}>Has Signed Liability Form? {signed} </div>
+                        <article>
+                            <h4 value={rentalPackage.id}>
+                                {first} {last} has requested to book:</h4>
+                            <div value={rentalPackage.id}>Date: {dateBooked} from {from}{startTime} until {until}{endTime}</div>
+                            <div value={rentalPackage.id}>Price: ${price}</div>
+                            <div value={rentalPackage.id}>Phone Number: {phone}</div>
+                            <div value={rentalPackage.id}>Email: {email}</div>
+                            <div value={rentalPackage.id}>Has Signed Liability Form? {signed} </div>
+                        </article>
                         <div className="employeeLoungeButtons">
-                            <button onClick={() => navigate(`/requests/${rentalPackage.id}`)} >See Request</button>
-                            {DeleteButton()}
+                            <button className="buttonz" onClick={() => navigate(`/requests/${rentalPackage.id}`)} >See Request</button>
+                            <button className="buttonz"
+                                onClick={() => {
+                                    fetch(`http://localhost:8080/rentalPackages/${rentalPackage.id}`, {
+                                        method: "DELETE"
+                                    })
+                                        .then(() => window.location.reload())
+                                }}>Delete
+                            </button>
+
                         </div>
                     </section>
 

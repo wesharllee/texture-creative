@@ -1,6 +1,7 @@
 import Select from 'react-select'
 import { useEffect, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
+import "./Create.css"
 
 //send page
 export const CreatePage = () => {
@@ -29,6 +30,12 @@ export const CreatePage = () => {
   const [selectedFurnitureOptions, setSelectedFurnitureOption] = useState([])
   const [selectedLightOptions, setSelectedLightOption] = useState([])
 
+  const [backdropsArray, setBackdropsArray] = useState([])
+  const [propsArray, setPropsArray] = useState([])
+  const [furnituresArray, setFurnituresArray] = useState([])
+  const [lightsArray, setLightsArray] = useState([])
+
+  // const [isShown, setIsShown] = useState(false)
 
   //when multiple-dropdown-option is selected create setter function for chosen option in state
   const handleBackdropChange = evt => {
@@ -240,6 +247,67 @@ export const CreatePage = () => {
   )
 
 
+  const backdropFind = () => {
+    let array = []
+    for (const selectedBackdropOption of selectedBackdropOptions) {
+      const newBackdropObj = backdrops.find(backdrop => backdrop?.id === selectedBackdropOption?.id)
+      array.push(newBackdropObj)
+    }
+    setBackdropsArray(array)
+  }
+
+  useEffect(
+    () => {
+      backdropFind()
+    }, [selectedBackdropOptions]
+  )
+
+  const propFind = () => {
+    let array = []
+    for (const selectedPropOption of selectedPropOptions) {
+      const newpropObj = props.find(prop => prop?.id === selectedPropOption?.id)
+      array.push(newpropObj)
+    }
+    setPropsArray(array)
+  }
+
+  useEffect(
+    () => {
+      propFind()
+    }, [selectedPropOptions]
+  )
+
+  const furnitureFind = () => {
+    let array = []
+    for (const selectedFurnitureOption of selectedFurnitureOptions) {
+      const newfurnitureObj = furnitures.find(furniture => furniture?.id === selectedFurnitureOption?.id)
+      array.push(newfurnitureObj)
+    }
+    setFurnituresArray(array)
+  }
+
+  useEffect(
+    () => {
+      furnitureFind()
+    }, [selectedFurnitureOptions]
+  )
+
+  const lightFind = () => {
+    let array = []
+    for (const selectedLightOption of selectedLightOptions) {
+      const newlightObj = lights.find(light => light?.id === selectedLightOption?.id)
+      array.push(newlightObj)
+    }
+    setLightsArray(array)
+  }
+
+  useEffect(
+    () => {
+      lightFind()
+    }, [selectedLightOptions]
+  )
+
+
   //in order to use multi choice dropdown menu we need id === value and name === label
   //create functions to achieve this and push into a setter function
   const backdropRename = () => {
@@ -251,6 +319,7 @@ export const CreatePage = () => {
     }
     setBackdropChoices(options)
   }
+
   //useEffect function to watch for initial option variable and utilize created rename function
   useEffect(
     () => {
@@ -310,142 +379,253 @@ export const CreatePage = () => {
     [lights]
   )
 
+
+
   //function to subtract startTime from endTime
   const minus = (startHour, endHour) => {
     let result = endHour - startHour
     return result
   }
 
+  const backdropOptionPic = () => {
+    let HTML = ""
+
+    if (selectedBackdropOptions.length === 0) {
+      HTML += ""
+    }
+    else {
+      HTML += "<>"
+      for (const selectedBackdropOption of selectedBackdropOptions) {
+        let newBackdropObj = backdrops.find(backdrop => backdrop.id === selectedBackdropOption.value)
+        let objHTML = `<img className="pic" src=${newBackdropObj.image} alt="image"/>`
+        HTML += objHTML
+      }
+      HTML += "</>"
+      // for (const backdrop of backdrops) {
+      //   for (const selectedBackdropOption of selectedBackdropOptions)
+      //     if (backdrop.id === selectedBackdropOption.value) {
+      //       pic += backdrop.image
+      //     }
+      // }
+    }
+    return HTML
+  }
+
+
+  let backdropHTML = () => {
+    let html = ""
+    html += `<img className="pic" src={backdropOptionPic()} alt="image"/>`
+    return html
+  }
+
+  const propOptionPic = () => {
+    let pic = ""
+    for (const selectedPropOption of selectedPropOptions)
+      if (selectedPropOption === undefined) {
+        pic += ""
+      }
+      else {
+        for (const prop of props) {
+          for (const selectedPropOption of selectedPropOptions)
+            if (prop.id === selectedPropOption.value) {
+              pic += prop.image
+            }
+        }
+      }
+    return pic
+  }
+
+  const furnitureOptionPic = () => {
+    let pic = ""
+    for (const selectedFurnitureOption of selectedFurnitureOptions)
+      if (selectedFurnitureOption === undefined) {
+        pic += ""
+      }
+      else {
+        for (const furniture of furnitures) {
+          for (const selectedFurnitureOption of selectedFurnitureOptions)
+            if (furniture.id === selectedFurnitureOption.value) {
+              pic += furniture.image
+            }
+        }
+      }
+    return pic
+  }
+
+  const lightOptionPic = () => {
+    let pic = ""
+    for (const selectedLightOption of selectedLightOptions)
+      if (selectedLightOption === undefined) {
+        pic += ""
+      }
+      else {
+        for (const light of lights) {
+          for (const selectedLightOption of selectedLightOptions)
+            if (light.id === selectedLightOption.value) {
+              pic += light.image
+            }
+        }
+      }
+    return pic
+  }
 
   return (
-    <form>
+    <form className='CreatePage'>
 
-      <h2>MULTISELECT MOFO</h2>
+      <h2>Create Your Experience</h2>
 
-      <fieldset>
-        <div>
-          <Select
-            isMulti
-            placeholder="Please Select Backdrops"
-            //capture selected option
-            value={selectedBackdropOptions}
-            //use the variable option that has been copied w/ added value and label
-            options={backdropChoices}
-            //onChange create a function to call setter function for selected option
-            onChange={handleBackdropChange}
-          />
-          {/* display selected option inside of multi-select dropdown menu */}
-          {selectedBackdropOptions && <div style={{ marginTop: 20, lineHeight: '25px' }}>
-          </div>}
-        </div>
-      </fieldset>
+      <section className='CreateOptions'>
 
-      <fieldset>
-        <div>
-          <Select
-            isMulti
-            placeholder="Please Select Props"
-            value={selectedPropOptions}
-            options={propChoices}
-            onChange={handlePropChange}
-          />
+        <article className='CreateSelections'>
+          <fieldset className='MultiSelect'>
+            <div className="content">
+              <Select
+                isMulti
+                placeholder="Backdrop Options"
+                //capture selected option
+                value={selectedBackdropOptions}
+                //use the variable option that has been copied w/ added value and label
+                options={backdropChoices}
+                //onChange create a function to call setter function for selected option
+                onChange={handleBackdropChange}
 
-          {selectedPropOptions && <div style={{ marginTop: 20, lineHeight: '25px' }}>
-          </div>}
-        </div>
-      </fieldset>
+              />
+              {/* display selected option inside of multi-select dropdown menu */}
+              {selectedBackdropOptions && <div style={{ marginTop: 20, lineHeight: '25px' }}>
+              </div>}
+            </div>
+          </fieldset>
 
-      <fieldset>
-        <div>
-          <Select
-            isMulti
-            placeholder="Please Select Furniture"
-            value={selectedFurnitureOptions}
-            options={furnitureChoices}
-            onChange={handleFurnitureChange}
-          />
+          <fieldset className='MultiSelect'>
+            <div>
+              <Select
+                isMulti
+                placeholder="Prop Options"
+                value={selectedPropOptions}
+                options={propChoices}
+                onChange={handlePropChange}
+              />
 
-          {selectedFurnitureOptions && <div style={{ marginTop: 20, lineHeight: '25px' }}>
-          </div>}
-        </div>
-      </fieldset>
+              {selectedPropOptions && <div style={{ marginTop: 20, lineHeight: '25px' }}>
+              </div>}
+            </div>
+          </fieldset>
 
-      <fieldset>
-        <div>
-          <Select
-            isMulti
-            placeholder="Please Select Lights"
-            value={selectedLightOptions}
-            options={lightChoices}
-            onChange={handleLightChange}
-          />
+          <fieldset className='MultiSelect'>
+            <div>
+              <Select
+                isMulti
+                placeholder="Furniture Options"
+                value={selectedFurnitureOptions}
+                options={furnitureChoices}
+                onChange={handleFurnitureChange}
+              />
 
-          {selectedLightOptions && <div style={{ marginTop: 20, lineHeight: '25px' }}>
-          </div>}
-        </div>
-      </fieldset>
+              {selectedFurnitureOptions && <div style={{ marginTop: 20, lineHeight: '25px' }}>
+              </div>}
+            </div>
+          </fieldset>
 
-      <fieldset>
-        <div className="form-group">
-          <label htmlFor="book__date">Book Date:</label>
-          <input
-            required autoFocus
-            type="date"
-            className="form-control"
-            value={newBooking.date}
-            onChange={
-              (evt) => {
-                const copy = { ...newBooking }
-                copy.date = evt.target.value
-                updateBooking(copy)
-              }
-            } />
-        </div>
-      </fieldset>
+          <fieldset className='MultiSelect'>
+            <div >
+              <Select
+                isMulti
+                placeholder="Light Options($50)"
+                value={selectedLightOptions}
+                options={lightChoices}
+                onChange={handleLightChange}
+              />
 
-      <fieldset>
-        <div className="form-group">
-          <label htmlFor="book__startTime">Start Time:</label>
-          <input
-            required autoFocus
-            type="time"
-            className="form-control"
-            value={newBooking.startTime}
-            onChange={
-              (evt) => {
-                const copy = { ...newBooking }
-                copy.startTime = evt.target.value
-                updateBooking(copy)
-              }
-            } />
-        </div>
-      </fieldset>
+              {selectedLightOptions && <div style={{ marginTop: 20, lineHeight: '25px' }}>
+              </div>}
+            </div>
+          </fieldset>
 
-      <fieldset>
-        <div className="form-group">
-          <label htmlFor="book__endTime">End Time:</label>
-          <input
-            required autoFocus
-            type="time"
-            className="form-control"
-            value={newBooking.endTime}
-            onChange={
-              (evt) => {
-                const copy = { ...newBooking }
-                copy.endTime = evt.target.value
-                copy.totalHours = minus(parseFloat(copy.startTime, 2), parseFloat(copy.endTime, 2))
-                updateBooking(copy)
-              }
-            } />
-        </div>
-      </fieldset>
-      
-      {/* call back button click function inside of displayed button */}
-      <button
-        onClick={(clickEvent) => bookButtonClick(clickEvent)}
-        className="btn btn-primary">
-        Book Your Session
-      </button>
+          <fieldset>
+            <div className="form-group">
+              <label htmlFor="book__date">Book Date:</label>
+              <input
+                required autoFocus
+                type="date"
+                className="form-control"
+                value={newBooking.date}
+                onChange={
+                  (evt) => {
+                    const copy = { ...newBooking }
+                    copy.date = evt.target.value
+                    updateBooking(copy)
+                  }
+                } />
+            </div>
+          </fieldset>
+
+          <fieldset>
+            <div className="form-group">
+              <label htmlFor="book__startTime">Start Time:</label>
+              <input
+                required autoFocus
+                type="time"
+                className="form-control"
+                value={newBooking.startTime}
+                onChange={
+                  (evt) => {
+                    const copy = { ...newBooking }
+                    copy.startTime = evt.target.value
+                    updateBooking(copy)
+                  }
+                } />
+            </div>
+          </fieldset>
+
+          <fieldset>
+            <div className="form-group">
+              <label htmlFor="book__endTime">End Time:</label>
+              <input
+                required autoFocus
+                type="time"
+                className="form-control"
+                value={newBooking.endTime}
+                onChange={
+                  (evt) => {
+                    const copy = { ...newBooking }
+                    copy.endTime = evt.target.value
+                    copy.totalHours = minus(parseFloat(copy.startTime, 2), parseFloat(copy.endTime, 2))
+                    updateBooking(copy)
+                  }
+                } />
+            </div>
+          </fieldset>
+
+        </article>
+        <article className='CreateImages'>
+          <div className='imageContainer'>
+
+            {backdropsArray.map(backdropObj =>
+              <img className="pic" src={backdropObj.image} alt="image" />
+            )}
+            {propsArray.map(propObj =>
+              <img className="pic" src={propObj.image} alt="image" />
+            )}
+            {furnituresArray.map(furnitureObj =>
+              <img className="pic" src={furnitureObj.image} alt="image" />
+            )}
+            {lightsArray.map(lightObj =>
+              <img className="pic" src={lightObj.image} alt="image" />
+            )}
+           
+          </div>
+        </article>
+
+        {/* call back button click function inside of displayed button */}
+      </section>
+      <div className='getCentered'>
+        <button
+          onClick={(clickEvent) => bookButtonClick(clickEvent)}
+          className="buttonz">
+          book your session
+        </button>
+      </div>
+
     </form>
   )
 

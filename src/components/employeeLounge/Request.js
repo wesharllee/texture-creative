@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react"
 import { useNavigate, useParams } from "react-router-dom"
+import "./Request.css"
 
 
 export const RequestsPage = () => {
@@ -86,12 +87,12 @@ export const RequestsPage = () => {
             packageArray.push(newBackdropObj)
         }
         let nameString = ""
-        for (let i= 0; i< packageArray.length; i++) {
+        for (let i = 0; i < packageArray.length; i++) {
             if ((packageArray.length - i) === 2) {
                 nameString += `${packageArray[i].name} and `
             } else if (packageArray.length === (i + 1)) {
                 nameString += `${packageArray[i].name}.`
-            }else {
+            } else {
                 nameString += `${packageArray[i].name}, `
             }
         }
@@ -105,12 +106,12 @@ export const RequestsPage = () => {
             packageArray.push(newPropObj)
         }
         let nameString = ""
-        for (let i= 0; i< packageArray.length; i++) {
+        for (let i = 0; i < packageArray.length; i++) {
             if ((packageArray.length - i) === 2) {
                 nameString += `${packageArray[i].name} and `
             } else if (packageArray.length === (i + 1)) {
                 nameString += `${packageArray[i].name}.`
-            }else {
+            } else {
                 nameString += `${packageArray[i].name}, `
             }
         }
@@ -124,18 +125,18 @@ export const RequestsPage = () => {
             packageArray.push(newFurnitureObj)
         }
         let nameString = ""
-        for (let i= 0; i< packageArray.length; i++) {
+        for (let i = 0; i < packageArray.length; i++) {
             if ((packageArray.length - i) === 2) {
                 nameString += `${packageArray[i].name} and `
             } else if (packageArray.length === (i + 1)) {
                 nameString += `${packageArray[i].name}.`
-            }else {
+            } else {
                 nameString += `${packageArray[i].name}, `
             }
         }
         return nameString
     }
-    
+
 
     const lightArrayFunc = (lightPackages) => {
         let packageArray = []
@@ -144,21 +145,21 @@ export const RequestsPage = () => {
             packageArray.push(newLightObj)
         }
         let nameString = ""
-        for (let i= 0; i< packageArray.length; i++) {
+        for (let i = 0; i < packageArray.length; i++) {
             if ((packageArray.length - i) === 2) {
                 nameString += `${packageArray[i].name} and `
             } else if (packageArray.length === (i + 1)) {
                 nameString += `${packageArray[i].name}.`
-            }else {
+            } else {
                 nameString += `${packageArray[i].name}, `
             }
         }
         return nameString
     }
-   
+
 
     const DeleteButton = () => {
-        return <button
+        return <button className="buttonz"
             onClick={() => {
                 fetch(`http://localhost:8080/rentalPackages/${id}`, {
                     method: "DELETE"
@@ -174,18 +175,20 @@ export const RequestsPage = () => {
     let propChoices = fullInfoRentalPackage.propPackages ? propArrayFunc(fullInfoRentalPackage?.propPackages) : 0
     let furnitureChoices = fullInfoRentalPackage.furniturePackages ? furnitureArrayFunc(fullInfoRentalPackage?.furniturePackages) : 0
     let lightChoices = fullInfoRentalPackage.lightPackages ? lightArrayFunc(fullInfoRentalPackage?.lightPackages) : 0
-    let name = rentalPackage?.user?.name
+    let first = rentalPackage?.user?.firstName
+    let last = rentalPackage?.user?.lastName
 
 
 
     return <>
-        <h2>This will be Requests</h2>
+        <h2>{first} {last}'s Choices</h2>
 
+<section className="RequestPage">
         <article>
             <div className="confirmation_dateBooked">
 
-                <section key={rentalPackage.id}>
-                    <div value={rentalPackage.id}>{name}</div>
+                <section className="Request" key={rentalPackage.id}>
+                    {/* <div value={rentalPackage.id}>{first} {last}'s Choices</div> */}
                     <div value={rentalPackage.id}>
                         Backdrop Choices: {backdropChoices}
                     </div>
@@ -198,20 +201,20 @@ export const RequestsPage = () => {
                     <div value={rentalPackage.id}>
                         Light Choices: {lightChoices}
                     </div>
-                    <div value={rentalPackage.id}>Price: ${total}</div>
+                    {/* <div value={rentalPackage.id}>Price: ${total}</div> */}
                 </section>
 
             </div>
-
-
-            <button onClick={() => navigate("/employeelounge")} >Employee Lounge</button>
-            {DeleteButton()}
-
-
-
-
-
         </article>
+        <article className="getRightish">
+            <button className="buttonz" onClick={() => navigate("/employeelounge")} >Employee Lounge</button>
+            {DeleteButton()}
+        </article>
+</section>
+
+
+
+
 
 
     </>

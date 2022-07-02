@@ -4,22 +4,33 @@
 
 /*Typography
 --------------------------------------------------------------*/
-* {
+/* * {
   border-radius: 1px;
-  /* border: 1px dashed goldenrod; */
-}
+  border: 1px dashed goldenrod;
+} */
 
 html {
   border-radius: 1px;
   border: 1px dashed pink;
+  height: max-content;
+
 }
 
+.mainTitle {
+  font-size: 80px;
+}
+
+
+
 body {
+
   border-radius: 1px;
   border: 1px dashed blue;
   color: #404040;
+  background-image: linear-gradient(rgb(22, 22, 22), rgb(40, 34, 34));
+  height: max-content;
   /* font-family: 'Stoke', serif; */
-  ;
+
   /* display: flex;
   align-items: center;
   justify-content: center; */
@@ -32,7 +43,8 @@ body {
   background-repeat: no-repeat;
   background-size: cover; */
   /* background-blend-mode: difference; */
- 
+
+
 }
 
 
@@ -42,27 +54,49 @@ button {
 
   display: flex;
   align-items: center;
-  justify-content: center;
+  text-align: center;
+  /* justify-content: center; 
   color: #404040;
   font-family: Verdana, Geneva, Tahoma, sans-serif;
   ;
   color: white;
   font-size: 14px;
   line-height: 1.75;
-  background-image: linear-gradient(to right, goldenrod, rgb(214, 182, 100));
+  
   padding: .25rem;
-  /* border-radius: 1rem; */
-    /* border: dashed turquoise; */
-    /* box-shadow: 0.15rem 0.15rem 0.25rem rgb(143, 143, 143); */
+
+
+  border-radius: 1rem; */
+  /* border: dashed turquoise; */
+  /* box-shadow: 0.15rem 0.15rem 0.25rem rgb(143, 143, 143); */
+
+
+  background-image: linear-gradient(rgb(44, 44, 44), rgb(50, 40, 40));
+  border-radius: .75rem;
+  border: 1px solid rgb(72, 86, 97);
+  color: white;
+  font-size: 18px;
+  padding: 0.4rem;
+  padding-left: .6rem;
+  padding-right: .6rem;
+  /* font-family: Copperplate, fantasy; */
+  font-family: Verdana, Geneva, Tahoma, sans-serif;
+  letter-spacing: 1px;
+  /* width: 31rem; */
+
 }
 
 #root {
-  
+
   border: 1px dashed white;
-  
-  
-  
-  
+  height: 100%;
+  /* display: flex; flex: 1; */
+  flex-direction: column;
+  /* background-image: url('https://www.desiringgod.org/dist/noise@2x.8547c16b.png'); */
+
+
+
+
 }
 
 input,
@@ -95,18 +129,19 @@ h1 {
 
 h2 {
   text-align: center;
-  font-family: 'Stoke', serif;
+  font-family: Verdana, Geneva, Tahoma, sans-serif;
   letter-spacing: 2px;
   border-radius: 1px;
   /* border: 1px dashed red; */
   padding-bottom: 2rem;
 }
+
 h3,
 h4,
 h5,
 h6 {
   text-align: center;
-  font-family: 'Stoke', serif;
+  font-family: Verdana, Geneva, Tahoma, sans-serif;
   letter-spacing: 2px;
 }
 
@@ -125,9 +160,15 @@ p {
   flex-wrap: wrap;
   justify-content: center;
   align-items: center;
-  border-radius: 1px;
-  border: 1px dashed green;
+  /* border-radius: 4rem; */
+  /* border: 1px dashed green; */
+  /* box-shadow: 0 0 8rem 8rem black inset;
+  box-shadow: 0.15rem 0.15rem 0.25rem rgb(143, 143, 143) inset; */
   /* padding: 3rem; */
+  /* max-width: 150rem; */
+  width: 100%;
+  z-index: 0;
+
 
 }
 
@@ -138,4 +179,174 @@ p {
   align-items: center;
   justify-content: center;
 
+}
+
+.getLeft {
+  display: flex;
+  align-items: center;
+  justify-content: left;
+  padding-top: 2rem;
+}
+
+.getRight {
+  display: flex;
+  align-items: center;
+  justify-content: right;
+  padding: 2rem;
+  padding-bottom: 10rem;
+}
+
+.buttonz {
+  cursor: pointer;
+  position: relative;
+  overflow: hidden;
+  transition: all 2s;
+}
+
+.buttonz:before {
+  width: 100%;
+  height: 100%;
+  content: '';
+  margin: auto;
+  position: absolute;
+  top: -100%;
+  left: -100%;
+  background: whitesmoke;
+  transition: all 2s;
+  z-index: -1;
+}
+
+.buttonz:hover {
+  color: rgb(22, 22, 22);
+  background: linear-gradient(to right, goldenrod, rgb(223, 192, 114));
+}
+
+.buttonz:hover:before {
+  top: 0;
+  left: 0;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+
+
+/* .wrapper {
+  width: max-content;
+  height: max-content;
+} */
+
+div.content {
+  position: relative;
+  /* width: max-content;
+  height: max-content; */
+  background-color: #000;
+  /* padding-bottom: 10rem; */
+}
+
+div.content:before {
+  display: block;
+  content: '';
+
+  position: absolute;
+  top: 0;
+  left: 0;
+  z-index: 1;
+
+  /* width: max-content;
+  height: max-content; */
+
+  background-image: linear-gradient(rgb(22, 22, 22), rgb(40, 34, 34));
+
+  background-size: cover;
+  background-position: center;
+
+  filter: blur(25px);
+
+  opacity: 0;
+  transition: filter 1.75s ease, opacity 0.7s ease;
+  animation: fadein 3s 0.5s forwards;
+}
+
+
+.wrapper:hover .content::before {
+  filter: blur(0);
+}
+
+
+.grain-overlay {
+  position: relative;
+  overflow: hidden;
+
+}
+
+.grain-overlay:before {
+  display: block;
+  position: absolute;
+  content: '';
+  background-image: url('https://www.desiringgod.org/dist/noise@2x.8547c16b.png');
+  background-size: auto;
+  opacity: .5;
+  width: 300%;
+  height: 300%;
+  left: -125%;
+  top: -125%;
+  z-index: 2;
+  animation: grain 5s steps(10) infinite;
+}
+
+
+@keyframes grain {
+
+  0%,
+  100% {
+    transform: translate(0, 0);
+  }
+
+  10% {
+    transform: translate(-5%, -10%);
+  }
+
+  20% {
+    transform: translate(-15%, 5%);
+  }
+
+  30% {
+    transform: translate(7%, -25%);
+  }
+
+  40% {
+    transform: translate(-5%, 25%);
+  }
+
+  50% {
+    transform: translate(-15%, 10%);
+  }
+
+  60% {
+    transform: translate(15%, 0%);
+  }
+
+  70% {
+    transform: translate(0%, 15%);
+  }
+
+  80% {
+    transform: translate(3%, 35%);
+  }
+
+  90% {
+    transform: translate(-10%, 10%);
+  }
+}
+
+@keyframes fadein {
+  0% {
+    opacity: 0;
+  }
+
+  100% {
+    opacity: .05;
+  }
 }
