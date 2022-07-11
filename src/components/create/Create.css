@@ -10,6 +10,7 @@
     flex: 1;
     flex-wrap: wrap;
     flex-direction: row;
+    padding-left: 2rem;
 
 }
 
@@ -53,3 +54,6 @@
 
 }
 
+.ConfirmationButtonContainer {
+    justify-content: center;
+}

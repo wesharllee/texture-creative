@@ -11,7 +11,7 @@
 
 html {
   border-radius: 1px;
-  border: 1px dashed pink;
+  /* border: 1px dashed pink; */
   height: max-content;
 
 }
@@ -25,7 +25,7 @@ html {
 body {
 
   border-radius: 1px;
-  border: 1px dashed blue;
+  /* border: 1px dashed blue; */
   color: #404040;
   background-image: linear-gradient(rgb(22, 22, 22), rgb(40, 34, 34));
   height: max-content;
@@ -88,7 +88,7 @@ button {
 
 #root {
 
-  border: 1px dashed white;
+  /* border: 1px dashed white; */
   height: 100%;
   /* display: flex; flex: 1; */
   flex-direction: column;

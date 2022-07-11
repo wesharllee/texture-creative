@@ -16,6 +16,7 @@ fieldset {
     text-align: left;
     padding: 3rem;
     border-radius: 1rem;
+    /* padding-bottom: 30rem; */
 
 }
 
@@ -47,6 +48,7 @@ fieldset {
     font-size: larger;
     text-align: left;
     font-weight: bold;
+    
 }
 
 .container--login {
@@ -61,6 +63,7 @@ fieldset {
     background-image: linear-gradient(rgb(28, 28, 28), rgb(34, 34, 34));
     background-blend-mode: overlay;
     background-repeat: no-repeat;
+    /* padding-bottom: 30rem; */
 }
 
 .button--close {
